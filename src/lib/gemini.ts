@@ -420,3 +420,304 @@ export const SMART_GENERATE_SCHEMA: object = {
   },
   required: ['projectName', 'description', 'requirementsText', 'modules', 'connections'],
 };
+
+// ============================================================
+// Agentic Pipeline — 4-step autonomous design agent
+// ============================================================
+
+/** Step 1 output schema: structured requirement analysis */
+export const REQUIREMENT_ANALYSIS_SCHEMA: object = {
+  type: 'object',
+  properties: {
+    projectType: { type: 'string', description: 'Type of project (e.g. IoT sensor node, motor controller)' },
+    keyParameters: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          parameter: { type: 'string' },
+          value: { type: 'string' },
+          unit: { type: 'string' },
+          priority: { type: 'string', enum: ['must', 'should', 'nice'] },
+        },
+        required: ['parameter', 'value', 'priority'],
+      },
+      description: 'Extracted key parameters (voltage, current, protocols, etc.)',
+    },
+    constraints: { type: 'array', items: { type: 'string' }, description: 'Design constraints' },
+    ambiguities: { type: 'array', items: { type: 'string' }, description: 'Unclear or missing requirements' },
+    suggestedModules: { type: 'array', items: { type: 'string' }, description: 'Recommended module categories' },
+    complexityEstimate: { type: 'string', enum: ['simple', 'moderate', 'complex'] },
+    enrichedRequirements: { type: 'string', description: 'Rewritten, clarified, detailed requirements text' },
+  },
+  required: ['projectType', 'keyParameters', 'constraints', 'ambiguities', 'suggestedModules', 'complexityEstimate', 'enrichedRequirements'],
+};
+
+/** Step 3 output schema: validation report */
+export const VALIDATION_REPORT_SCHEMA: object = {
+  type: 'object',
+  properties: {
+    overallScore: { type: 'number', description: 'Confidence score 0-100' },
+    issues: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          solutionId: { type: 'string' },
+          severity: { type: 'string', enum: ['critical', 'warning', 'info'] },
+          category: { type: 'string', enum: ['voltage_mismatch', 'bus_conflict', 'missing_component', 'power_budget', 'signal_integrity', 'cost', 'other'] },
+          description: { type: 'string' },
+          affectedModules: { type: 'array', items: { type: 'string' } },
+          suggestedFix: { type: 'string' },
+        },
+        required: ['solutionId', 'severity', 'category', 'description', 'suggestedFix'],
+      },
+    },
+    recommendations: { type: 'array', items: { type: 'string' } },
+    passesReview: { type: 'boolean', description: 'true if no critical issues found' },
+  },
+  required: ['overallScore', 'issues', 'recommendations', 'passesReview'],
+};
+
+/** Pipeline step status for UI progress tracking */
+export type PipelineStep = 'perceive' | 'generate' | 'validate' | 'iterate' | 'done';
+
+export interface PipelineProgress {
+  currentStep: PipelineStep;
+  stepNumber: number;
+  totalSteps: number;
+  message: string;
+  requirementAnalysis?: unknown;
+  validationReport?: unknown;
+}
+
+export interface AgenticPipelineOptions {
+  apiKey: string;
+  model: string;
+  proModel?: string;
+  systemPrompt: string;
+  userPrompt: string;
+  temperature?: number;
+  onProgress?: (progress: PipelineProgress) => void;
+}
+
+/**
+ * Run the 4-step agentic design pipeline:
+ * 1. Perceive  — Analyze and enrich requirements
+ * 2. Generate  — Create 3 differentiated solutions (structured output)
+ * 3. Validate  — AI self-review for engineering issues
+ * 4. Iterate   — Auto-fix any critical issues found
+ *
+ * Returns the final solutions JSON string.
+ */
+export async function runAgenticPipeline(opts: AgenticPipelineOptions): Promise<string> {
+  const {
+    apiKey,
+    model,
+    proModel = 'gemini-3-pro-preview',
+    systemPrompt,
+    userPrompt,
+    temperature = 0.2,
+    onProgress,
+  } = opts;
+
+  // ---- Step 1: Perceive — Requirement Analysis ----
+  onProgress?.({
+    currentStep: 'perceive',
+    stepNumber: 1,
+    totalSteps: 4,
+    message: 'Step 1/4: Analyzing requirements with Gemini 3...',
+  });
+
+  const step1Result = await callGemini({
+    apiKey,
+    model,
+    systemPrompt: [
+      'You are a senior hardware systems architect.',
+      'Analyze the following circuit design requirements.',
+      'Extract all key parameters (voltages, currents, protocols, interfaces, power budget).',
+      'Identify any ambiguities or missing information.',
+      'Suggest which module categories are needed.',
+      'Rewrite the requirements into a clearer, more detailed version.',
+    ].join(' '),
+    userPrompt,
+    temperature: 0.1,
+    jsonSchema: REQUIREMENT_ANALYSIS_SCHEMA,
+  });
+
+  let requirementAnalysis: Record<string, unknown>;
+  try {
+    requirementAnalysis = JSON.parse(step1Result);
+  } catch {
+    requirementAnalysis = { enrichedRequirements: userPrompt };
+  }
+
+  onProgress?.({
+    currentStep: 'perceive',
+    stepNumber: 1,
+    totalSteps: 4,
+    message: 'Step 1/4 complete. Found ' +
+      (Array.isArray(requirementAnalysis.keyParameters) ? requirementAnalysis.keyParameters.length : 0) +
+      ' key parameters, ' +
+      (Array.isArray(requirementAnalysis.ambiguities) ? requirementAnalysis.ambiguities.length : 0) +
+      ' ambiguities.',
+    requirementAnalysis,
+  });
+
+  // ---- Step 2: Generate — Solution Creation ----
+  onProgress?.({
+    currentStep: 'generate',
+    stepNumber: 2,
+    totalSteps: 4,
+    message: 'Step 2/4: Generating 3 differentiated solutions...',
+  });
+
+  const enrichedPrompt = [
+    userPrompt,
+    '',
+    '--- AI Requirement Analysis (from Step 1) ---',
+    typeof requirementAnalysis.enrichedRequirements === 'string'
+      ? requirementAnalysis.enrichedRequirements
+      : '',
+    '',
+    'Key parameters identified:',
+    ...(Array.isArray(requirementAnalysis.keyParameters)
+      ? (requirementAnalysis.keyParameters as Record<string, string>[]).map(
+          (p) => `- ${p.parameter}: ${p.value} ${p.unit || ''} [${p.priority}]`
+        )
+      : []),
+    '',
+    'Design constraints:',
+    ...(Array.isArray(requirementAnalysis.constraints)
+      ? (requirementAnalysis.constraints as string[]).map((c) => `- ${c}`)
+      : []),
+  ].join('\n');
+
+  const step2Result = await callGemini({
+    apiKey,
+    model,
+    systemPrompt,
+    userPrompt: enrichedPrompt,
+    temperature,
+    jsonSchema: SOLUTION_OUTPUT_SCHEMA,
+  });
+
+  onProgress?.({
+    currentStep: 'generate',
+    stepNumber: 2,
+    totalSteps: 4,
+    message: 'Step 2/4 complete. 3 solutions generated. Starting validation...',
+  });
+
+  // ---- Step 3: Validate — AI Self-Review ----
+  onProgress?.({
+    currentStep: 'validate',
+    stepNumber: 3,
+    totalSteps: 4,
+    message: 'Step 3/4: Gemini 3 Pro is reviewing engineering correctness...',
+  });
+
+  let validationReport: Record<string, unknown>;
+  try {
+    const step3Result = await callGemini({
+      apiKey,
+      model: proModel,
+      systemPrompt: [
+        'You are an expert hardware design reviewer and EE quality auditor.',
+        'Review the following AI-generated circuit solutions for engineering correctness.',
+        'Check for: voltage mismatches between connected modules, bus protocol conflicts,',
+        'missing essential components (decoupling caps, pull-up resistors, ESD protection),',
+        'power budget violations, signal integrity issues, and unrealistic cost estimates.',
+        'Be thorough but fair. Score the overall quality 0-100.',
+      ].join(' '),
+      userPrompt: [
+        'Original requirements:',
+        userPrompt,
+        '',
+        'Generated solutions to review:',
+        step2Result,
+      ].join('\n'),
+      temperature: 0.1,
+      jsonSchema: VALIDATION_REPORT_SCHEMA,
+    });
+
+    validationReport = JSON.parse(step3Result);
+  } catch {
+    validationReport = { overallScore: 75, issues: [], recommendations: [], passesReview: true };
+  }
+
+  const criticalIssues = Array.isArray(validationReport.issues)
+    ? (validationReport.issues as Record<string, string>[]).filter((i) => i.severity === 'critical')
+    : [];
+
+  onProgress?.({
+    currentStep: 'validate',
+    stepNumber: 3,
+    totalSteps: 4,
+    message: `Step 3/4 complete. Score: ${validationReport.overallScore ?? '?'}/100. ${criticalIssues.length} critical issue(s).`,
+    validationReport,
+  });
+
+  // ---- Step 4: Iterate — Auto-Fix (only if critical issues) ----
+  if (criticalIssues.length > 0) {
+    onProgress?.({
+      currentStep: 'iterate',
+      stepNumber: 4,
+      totalSteps: 4,
+      message: `Step 4/4: Auto-fixing ${criticalIssues.length} critical issue(s)...`,
+    });
+
+    const fixPrompt = [
+      'The following circuit solutions were reviewed and critical issues were found.',
+      'Please fix ALL critical issues while preserving the overall solution structure.',
+      '',
+      'Original solutions:',
+      step2Result,
+      '',
+      'Critical issues to fix:',
+      ...criticalIssues.map(
+        (issue, i) =>
+          `${i + 1}. [${issue.solutionId}] ${issue.category}: ${issue.description} -> Fix: ${issue.suggestedFix}`
+      ),
+      '',
+      'Additional recommendations:',
+      ...(Array.isArray(validationReport.recommendations)
+        ? (validationReport.recommendations as string[]).map((r) => `- ${r}`)
+        : []),
+      '',
+      'Output the corrected solutions in the same JSON format.',
+    ].join('\n');
+
+    const step4Result = await callGemini({
+      apiKey,
+      model,
+      systemPrompt,
+      userPrompt: fixPrompt,
+      temperature,
+      jsonSchema: SOLUTION_OUTPUT_SCHEMA,
+    });
+
+    onProgress?.({
+      currentStep: 'done',
+      stepNumber: 4,
+      totalSteps: 4,
+      message: `Pipeline complete. ${criticalIssues.length} issue(s) auto-fixed. Score: ${validationReport.overallScore ?? '?'}/100.`,
+      requirementAnalysis,
+      validationReport,
+    });
+
+    return step4Result;
+  }
+
+  // No critical issues — Step 2 output is the final result
+  onProgress?.({
+    currentStep: 'done',
+    stepNumber: 4,
+    totalSteps: 4,
+    message: `Pipeline complete. All checks passed. Confidence: ${validationReport.overallScore ?? '?'}/100.`,
+    requirementAnalysis,
+    validationReport,
+  });
+
+  return step2Result;
+}

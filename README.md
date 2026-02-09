@@ -21,59 +21,66 @@ CircuitMind is a visual, AI-powered circuit design platform that transforms idea
 
 ---
 
-## Gemini 3 Integration
+## Gemini 3 Integration — Autonomous Agentic Pipeline
 
-CircuitMind deeply integrates three core Gemini 3 capabilities:
+CircuitMind is **not a prompt wrapper**. It orchestrates a **4-step agentic pipeline** with multiple Gemini 3 API calls per project:
 
-### Multimodal Vision (gemini-3-pro-preview)
-Users upload photos of hand-drawn circuit sketches. Gemini 3's vision model identifies every component (MCU, sensors, power regulators), signal paths, and bus connections — converting analog sketches into structured digital circuit designs. This is the **"wow factor"**: sketch a circuit on paper, photograph it, and get a complete digital design in seconds.
+### Step 1: Perceive (gemini-3-flash-preview)
+Gemini 3 analyzes raw requirements, extracts key electrical parameters (voltages, protocols, power budgets), identifies ambiguities, and produces an enriched requirement specification that feeds all downstream steps.
 
-### Structured Output with JSON Schema (gemini-3-flash-preview)
-We use Gemini 3's native JSON Schema enforcement (`responseMimeType: "application/json"` + `responseSchema`) to guarantee type-safe engineering data output. Every AI-generated solution strictly conforms to our `ProjectSolution` TypeScript interface — including L1 architecture graphs, R&D workflow swim-lane diagrams, module lists, edge connections, milestones, and open questions. This eliminates JSON parsing errors entirely.
+### Step 2: Generate (gemini-3-flash-preview + JSON Schema)
+Using Gemini 3's native `responseSchema` enforcement, the model generates 3 differentiated circuit solutions — each with L1 architecture graphs, R&D workflow swim-lane diagrams, module lists, BOM estimates, milestones, and open questions. JSON Schema guarantees type-safe output.
 
-### Advanced Reasoning
-Gemini 3's reasoning capabilities power real-time circuit validation: voltage mismatch detection (e.g., 5V connected to 3.3V input), bus type compatibility checks (I2C cannot connect to SPI), and automatic "glue component" recommendations (e.g., pull-up resistors for I2C buses). The model generates 3 differentiated solutions per project with distinct trade-offs in cost, complexity, and performance.
+### Step 3: Validate (gemini-3-pro-preview)
+Gemini 3 Pro acts as an **independent EE quality auditor**, reviewing its own generated solutions for voltage mismatches, bus conflicts, missing components, power budget violations, and signal integrity issues. It scores confidence 0-100 and flags critical problems.
+
+### Step 4: Iterate (gemini-3-flash-preview)
+If critical issues are found, the pipeline **automatically feeds them back** for correction — producing a self-healed final output without human intervention.
+
+### Additional: Multimodal Sketch Analysis (gemini-3-pro-preview)
+Users photograph hand-drawn circuit sketches. Gemini 3 Vision identifies every component, signal path, and bus connection — converting analog sketches into structured digital designs in seconds.
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  CircuitMind Frontend                │
-│              React 19 + TypeScript + Vite            │
-│                                                     │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐ │
-│  │ Sketch      │  │ Smart        │  │ Solution   │ │
-│  │ Analyzer    │  │ Generator    │  │ Engine     │ │
-│  │ (Multimodal)│  │ (One-liner)  │  │ (3 schemes)│ │
-│  └──────┬──────┘  └──────┬───────┘  └─────┬──────┘ │
-│         │                │                 │        │
-│         └────────────────┼─────────────────┘        │
-│                          │                          │
-│              ┌───────────▼───────────┐              │
-│              │   Gemini 3 API Client │              │
-│              │  (src/lib/gemini.ts)  │              │
-│              └───────────┬───────────┘              │
-└──────────────────────────┼──────────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  Google Gemini 3 API    │
-              │  ┌──────────────────┐   │
-              │  │ gemini-3-pro     │   │  ← Multimodal sketch analysis
-              │  │ -preview         │   │
-              │  └──────────────────┘   │
-              │  ┌──────────────────┐   │
-              │  │ gemini-3-flash   │   │  ← Structured output generation
-              │  │ -preview         │   │
-              │  └──────────────────┘   │
-              └─────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    CircuitMind Frontend                  │
+│                React 19 + TypeScript + Vite              │
+│                                                         │
+│  ┌──────────────┐  ┌─────────────┐  ┌────────────────┐ │
+│  │ Sketch       │  │ Smart       │  │ Agentic        │ │
+│  │ Analyzer     │  │ Generator   │  │ Pipeline       │ │
+│  │ (Multimodal) │  │ (One-liner) │  │ (4-step agent) │ │
+│  └──────┬───────┘  └──────┬──────┘  └───────┬────────┘ │
+│         │                 │                  │          │
+│         └─────────────────┼──────────────────┘          │
+│                           │                             │
+│               ┌───────────▼───────────┐                 │
+│               │   Gemini 3 API Client │                 │
+│               │  (src/lib/gemini.ts)  │                 │
+│               └───────────┬───────────┘                 │
+└───────────────────────────┼─────────────────────────────┘
+                            │
+               ┌────────────▼────────────┐
+               │   Google Gemini 3 API   │
+               │                         │
+               │  Step 1: Perceive       │ ← Requirement analysis
+               │  Step 2: Generate       │ ← Structured output (JSON Schema)
+               │  Step 3: Validate       │ ← AI self-review (gemini-3-pro)
+               │  Step 4: Iterate        │ ← Auto-fix critical issues
+               │                         │
+               │  + Multimodal Vision    │ ← Sketch analysis (gemini-3-pro)
+               └─────────────────────────┘
 ```
 
 ---
 
 ## Key Features
 
+- **4-Step Agentic Pipeline** — Autonomous design agent: Perceive -> Generate -> Validate -> Iterate (4+ Gemini API calls per project)
+- **AI Self-Validation** — Gemini 3 Pro reviews its own output for engineering errors and auto-fixes critical issues
 - **AI Sketch Recognition** — Upload a photo of a hand-drawn circuit; Gemini 3 Vision identifies all components and connections
 - **Smart Generate** — Describe your project in one sentence; AI generates the complete specification
 - **3 Alternative Solutions** — Each project generates 3 differentiated circuit architectures for comparison

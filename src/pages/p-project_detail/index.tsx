@@ -46,7 +46,7 @@ import {
   setProjectStatus,
 } from '../../lib/projectsStore';
 import { loadAiConfig } from '../../lib/storage';
-import { callGemini, SOLUTION_OUTPUT_SCHEMA } from '../../lib/gemini';
+import { runAgenticPipeline, type PipelineProgress } from '../../lib/gemini';
 
 type TabKey = 'workflow' | 'requirements' | 'schemes';
 
@@ -924,6 +924,7 @@ const ProjectDetailPage: React.FC = () => {
     null,
   );
   const [archViewTab, setArchViewTab] = useState<'l1' | 'workflow' | 'legacy'>('legacy');
+  const [pipelineProgress, setPipelineProgress] = useState<PipelineProgress | null>(null);
   const isGeneratingRef = useRef(false);
   const reloadProject = useCallback(() => {
     setProject(getProjectById(projectId));
@@ -989,14 +990,16 @@ const ProjectDetailPage: React.FC = () => {
       let data: unknown = null;
 
       if (config.provider === 'gemini') {
-        // Use Gemini 3 with structured output (JSON Schema)
-        const geminiResult = await callGemini({
+        // Use 4-step Agentic Pipeline for Gemini 3
+        setPipelineProgress(null);
+        const geminiResult = await runAgenticPipeline({
           apiKey: config.apiKey,
           model: config.model,
+          proModel: 'gemini-3-pro-preview',
           systemPrompt: system,
           userPrompt: user,
           temperature: config.temperature ?? 0.2,
-          jsonSchema: SOLUTION_OUTPUT_SCHEMA,
+          onProgress: (progress) => setPipelineProgress({ ...progress }),
         });
         rawText = geminiResult;
         hasStructuredPayload = false; // text needs parsing
@@ -1300,16 +1303,57 @@ const ProjectDetailPage: React.FC = () => {
 
               {(() => {
                 if (isGenerating) {
+                  const stepLabels = [
+                    { key: 'perceive', label: 'Requirement Analysis', icon: 'fa-search' },
+                    { key: 'generate', label: 'Solution Generation', icon: 'fa-magic' },
+                    { key: 'validate', label: 'AI Self-Validation', icon: 'fa-check-circle' },
+                    { key: 'iterate', label: 'Auto-Fix Issues', icon: 'fa-wrench' },
+                  ];
+                  const currentStepIdx = pipelineProgress
+                    ? stepLabels.findIndex(s => s.key === pipelineProgress.currentStep)
+                    : 0;
                   return (
-                    <div className="bg-white rounded-2xl shadow-card p-8 text-center text-text-secondary">
-                      <div className="text-4xl mb-3">
-                        <i className="fas fa-spinner fa-spin"></i>
+                    <div className="bg-white rounded-2xl shadow-card p-8">
+                      <div className="text-center mb-6">
+                        <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-4">
+                          <i className="fas fa-robot text-indigo-600"></i>
+                          <span className="text-sm font-medium text-indigo-700">Agentic Design Pipeline</span>
+                        </div>
+                        <div className="text-lg font-semibold text-text-primary">
+                          {pipelineProgress?.message || 'Initializing AI pipeline...'}
+                        </div>
                       </div>
-                      <div className="text-lg font-medium text-text-primary mb-1">
-                        生成中
+                      {/* Step progress bar */}
+                      <div className="flex items-center justify-between max-w-xl mx-auto mb-6">
+                        {stepLabels.map((step, idx) => {
+                          const isActive = idx === currentStepIdx;
+                          const isDone = idx < currentStepIdx || pipelineProgress?.currentStep === 'done';
+                          return (
+                            <div key={step.key} className="flex flex-col items-center flex-1">
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold mb-2 transition-all duration-500 ${
+                                isDone ? 'bg-emerald-500 text-white' :
+                                isActive ? 'bg-indigo-600 text-white animate-pulse' :
+                                'bg-slate-200 text-slate-400'
+                              }`}>
+                                {isDone ? <i className="fas fa-check"></i> :
+                                 isActive ? <i className={`fas ${step.icon} fa-spin`}></i> :
+                                 idx + 1}
+                              </div>
+                              <div className={`text-xs font-medium text-center ${
+                                isDone ? 'text-emerald-600' :
+                                isActive ? 'text-indigo-600' :
+                                'text-slate-400'
+                              }`}>{step.label}</div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div className="text-sm">
-                        正在请求 AI 生成方案，请稍候
+                      {/* Progress bar */}
+                      <div className="w-full bg-slate-200 rounded-full h-2 max-w-xl mx-auto">
+                        <div
+                          className="bg-indigo-600 h-2 rounded-full transition-all duration-700"
+                          style={{ width: `${pipelineProgress?.currentStep === 'done' ? 100 : ((pipelineProgress?.stepNumber ?? 1) / 4) * 100}%` }}
+                        />
                       </div>
                     </div>
                   );
