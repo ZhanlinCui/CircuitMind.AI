@@ -943,6 +943,10 @@ const ProjectDetailPage: React.FC = () => {
     const nextSolutions = project.solutions ?? [];
     setSolutions(nextSolutions);
     setSelectedSolutionId(nextSolutions[0]?.id ?? null);
+    // Auto-switch to Solutions tab if solutions exist
+    if (nextSolutions.length > 0) {
+      setActiveTab('schemes');
+    }
   }, [project]);
 
   const handleDelete = () => {
