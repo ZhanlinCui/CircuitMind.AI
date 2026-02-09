@@ -46,17 +46,23 @@ export interface AiConfig {
 
 const AI_CONFIG_STORAGE_KEY = 'pcbtool.aiConfig.v1';
 
+// Demo API key for hackathon judges — auto-configured on first visit
+// Judges can also replace with their own key in Settings > AI Compute Config
+const DEMO_API_KEY = 'AIzaSyAQckzDi-6lagl6m1eTTqhNuEx6zJyU-gk';
+
 const DEFAULT_AI_CONFIG: AiConfig = {
   provider: 'gemini',
   baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-  apiKey: '',
+  apiKey: DEMO_API_KEY,
   model: 'gemini-3-flash-preview',
   temperature: 0.2,
 };
 
 export function loadAiConfig(): AiConfig | undefined {
   const saved = loadFromLocalStorage<AiConfig>(AI_CONFIG_STORAGE_KEY);
-  if (saved) return saved;
+  if (saved && saved.apiKey) return saved;
+  // Auto-initialize with demo key so judges can test immediately
+  saveToLocalStorage(AI_CONFIG_STORAGE_KEY, DEFAULT_AI_CONFIG);
   return DEFAULT_AI_CONFIG;
 }
 

@@ -58,11 +58,11 @@ const UserProfilePage: React.FC = () => {
   };
 
   const [basicProfileForm, setBasicProfileForm] = useState<BasicProfileForm>({
-    fullName: '张工程师',
-    email: 'zhang.engineer@example.com',
-    company: '电子科技有限公司',
-    position: '硬件工程师',
-    bio: '10年硬件开发经验，擅长嵌入式系统设计和PCB布局。在消费电子和工业控制领域有丰富经验。'
+    fullName: 'Alex Chen',
+    email: 'alex.chen@circuitmind.ai',
+    company: 'CircuitMind',
+    position: 'Hardware Engineer',
+    bio: '10 years of hardware development experience. Specializing in embedded systems design and PCB layout across consumer electronics and industrial control domains.'
   });
 
   const [accountSecurityForm, setAccountSecurityForm] = useState<AccountSecurityForm>({
@@ -269,11 +269,11 @@ const UserProfilePage: React.FC = () => {
 
   const handleBasicProfileCancel = () => {
     setBasicProfileForm({
-      fullName: '张工程师',
-      email: 'zhang.engineer@example.com',
-      company: '电子科技有限公司',
-      position: '硬件工程师',
-      bio: '10年硬件开发经验，擅长嵌入式系统设计和PCB布局。在消费电子和工业控制领域有丰富经验。'
+      fullName: 'Alex Chen',
+      email: 'alex.chen@circuitmind.ai',
+      company: 'CircuitMind',
+      position: 'Hardware Engineer',
+      bio: '10 years of hardware development experience. Specializing in embedded systems design and PCB layout across consumer electronics and industrial control domains.'
     });
   };
 

@@ -19,7 +19,7 @@
     "ai_connected": "AI Connected",
     "ai_disconnected": "AI Disconnected",
     "no_model": "No Model",
-    "engineer": "Engineer Zhang",
+    "engineer": "Alex Chen",
     "system_status": "System Status",
     "server": "Server",
     "online": "Online",
@@ -63,7 +63,7 @@
     }
   },
   "dashboard": {
-    "welcome": "Welcome back, Engineer Zhang",
+    "welcome": "Welcome back, Alex",
     "create_project": "Create New Project",
     "quick_access": "Quick Access",
     "quick": {
