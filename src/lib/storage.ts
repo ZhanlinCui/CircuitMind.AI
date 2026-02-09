@@ -49,16 +49,14 @@ const AI_CONFIG_STORAGE_KEY = 'pcbtool.aiConfig.v1';
 const DEFAULT_AI_CONFIG: AiConfig = {
   provider: 'gemini',
   baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-  apiKey: 'AIzaSyAQckzDi-6lagl6m1eTTqhNuEx6zJyU-gk',
+  apiKey: '',
   model: 'gemini-3-flash-preview',
   temperature: 0.2,
 };
 
 export function loadAiConfig(): AiConfig | undefined {
   const saved = loadFromLocalStorage<AiConfig>(AI_CONFIG_STORAGE_KEY);
-  if (saved && saved.apiKey) return saved;
-  // Auto-initialize with demo key for hackathon judges
-  saveToLocalStorage(AI_CONFIG_STORAGE_KEY, DEFAULT_AI_CONFIG);
+  if (saved) return saved;
   return DEFAULT_AI_CONFIG;
 }
 

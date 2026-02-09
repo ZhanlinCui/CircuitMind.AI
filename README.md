@@ -1,96 +1,116 @@
-# CircuitMind — AI-Native Circuit Design Platform
+<p align="center">
+  <img src="https://img.shields.io/badge/Gemini_3-Powered-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini 3" />
+  <img src="https://img.shields.io/badge/React_19-TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React 19" />
+  <img src="https://img.shields.io/badge/Vite_7-Fast-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-Styling-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT" />
+</p>
 
-> **Sketch it. Describe it. Build it.**
-> The first AI-native circuit design platform powered by Google Gemini 3.
+<h1 align="center">CircuitMind.AI</h1>
 
-Hardware design has always been the domain of specialized engineers. CircuitMind changes that by leveraging Gemini 3's multimodal reasoning to let anyone — students, makers, entrepreneurs — design professional circuit systems through hand-drawn sketches and natural language descriptions.
+<p align="center">
+  <strong>The first autonomous AI circuit design agent — Sketch it. Describe it. Build it.</strong>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#gemini-3-integration">Gemini 3 Integration</a> •
+  <a href="#key-features">Features</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="./README.zh-CN.md">中文文档</a>
+</p>
 
 ---
 
-## The Problem
+## What is CircuitMind?
 
-Designing electronic circuits requires deep knowledge of component selection, power management, bus protocols, and PCB layout. Students and makers face a steep learning curve, and even experienced engineers spend days iterating on system architecture before writing a single line of schematic.
+**CircuitMind** is an AI-native circuit design platform that transforms hand-drawn sketches and natural language descriptions into production-ready hardware solutions. It leverages Google **Gemini 3**'s multimodal reasoning through a **4-step autonomous agentic pipeline** — not a single-prompt wrapper.
 
-## Our Solution
+> **Built for the [Google DeepMind Gemini 3 Hackathon 2026](https://gemini3.devpost.com/)**
 
-CircuitMind is a visual, AI-powered circuit design platform that transforms ideas into production-ready hardware solutions in minutes:
+### The Problem
 
-1. **Sketch or Describe** — Upload a hand-drawn circuit sketch or type a one-sentence project idea
-2. **AI Analyzes** — Gemini 3 identifies components, validates connections, and generates 3 alternative solutions
-3. **Review & Build** — Get L1 architecture diagrams, R&D workflows, BOM lists, and development milestones
+Designing electronic circuits requires deep expertise in component selection, power management, bus protocols, and PCB layout. Students and makers face a steep learning curve. Even experienced engineers spend days iterating on system architecture.
+
+### Our Solution
+
+CircuitMind lets anyone design circuits in 3 ways:
+
+1. **Sketch it** — Upload a hand-drawn circuit photo; Gemini 3 Vision identifies all components
+2. **Describe it** — Type one sentence; AI generates the complete project specification
+3. **Build it** — A 4-step agent pipeline produces 3 validated, production-ready solutions
 
 ---
 
-## Gemini 3 Integration — Autonomous Agentic Pipeline
+## Gemini 3 Integration
 
-CircuitMind is **not a prompt wrapper**. It orchestrates a **4-step agentic pipeline** with multiple Gemini 3 API calls per project:
+CircuitMind orchestrates **4+ Gemini 3 API calls per project** through an autonomous agentic pipeline:
 
-### Step 1: Perceive (gemini-3-flash-preview)
-Gemini 3 analyzes raw requirements, extracts key electrical parameters (voltages, protocols, power budgets), identifies ambiguities, and produces an enriched requirement specification that feeds all downstream steps.
+| Step | Model | What It Does |
+|------|-------|-------------|
+| **1. Perceive** | `gemini-3-flash-preview` | Analyzes requirements, extracts key electrical parameters, identifies ambiguities |
+| **2. Generate** | `gemini-3-flash-preview` + JSON Schema | Generates 3 differentiated circuit solutions with enforced type-safe structured output |
+| **3. Validate** | `gemini-3-pro-preview` | AI self-reviews solutions for voltage mismatches, bus conflicts, missing components; scores 0-100 |
+| **4. Iterate** | `gemini-3-flash-preview` | Auto-fixes critical issues found in validation — self-healing without human intervention |
 
-### Step 2: Generate (gemini-3-flash-preview + JSON Schema)
-Using Gemini 3's native `responseSchema` enforcement, the model generates 3 differentiated circuit solutions — each with L1 architecture graphs, R&D workflow swim-lane diagrams, module lists, BOM estimates, milestones, and open questions. JSON Schema guarantees type-safe output.
+**Additional capabilities:**
+- **Multimodal Sketch Analysis** — Gemini 3 Vision converts hand-drawn circuit photos into structured JSON
+- **Smart Generate** — One sentence → complete project specification with modules and connections
+- **JSON Schema Enforcement** — `responseMimeType: "application/json"` + `responseSchema` guarantees type-safe output
 
-### Step 3: Validate (gemini-3-pro-preview)
-Gemini 3 Pro acts as an **independent EE quality auditor**, reviewing its own generated solutions for voltage mismatches, bus conflicts, missing components, power budget violations, and signal integrity issues. It scores confidence 0-100 and flags critical problems.
+---
 
-### Step 4: Iterate (gemini-3-flash-preview)
-If critical issues are found, the pipeline **automatically feeds them back** for correction — producing a self-healed final output without human intervention.
+## Key Features
 
-### Additional: Multimodal Sketch Analysis (gemini-3-pro-preview)
-Users photograph hand-drawn circuit sketches. Gemini 3 Vision identifies every component, signal path, and bus connection — converting analog sketches into structured digital designs in seconds.
+| Feature | Description |
+|---------|------------|
+| **4-Step Agentic Pipeline** | Perceive → Generate → Validate → Iterate with real-time step progress UI |
+| **AI Self-Validation** | Gemini reviews its own output for engineering errors and auto-corrects |
+| **Multimodal Sketch Recognition** | Upload a photo of a hand-drawn circuit diagram |
+| **Smart Generate** | One-sentence project idea → complete circuit specification |
+| **3 Alternative Solutions** | Compare cost, complexity, and performance trade-offs |
+| **L1 Architecture Graphs** | Interactive system topology with ports, edges, and signal paths |
+| **R&D Workflow** | Swim-lane diagrams: hardware/software/test lanes, milestones, gate reviews |
+| **Real-time Validation** | Voltage mismatch, bus compatibility, pull-up resistor detection |
+| **Module Library** | Power, MCU, sensor, interface, glue, and protection modules |
+| **Circuit Case Library** | 8 reference designs (Arduino, STM32, ESP32, automotive, medical) |
+| **Component Database** | Searchable catalog with specs and datasheets |
+| **Bilingual UI** | Full English and Chinese (i18n) support |
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    CircuitMind Frontend                  │
-│                React 19 + TypeScript + Vite              │
-│                                                         │
-│  ┌──────────────┐  ┌─────────────┐  ┌────────────────┐ │
-│  │ Sketch       │  │ Smart       │  │ Agentic        │ │
-│  │ Analyzer     │  │ Generator   │  │ Pipeline       │ │
-│  │ (Multimodal) │  │ (One-liner) │  │ (4-step agent) │ │
-│  └──────┬───────┘  └──────┬──────┘  └───────┬────────┘ │
-│         │                 │                  │          │
-│         └─────────────────┼──────────────────┘          │
-│                           │                             │
-│               ┌───────────▼───────────┐                 │
-│               │   Gemini 3 API Client │                 │
-│               │  (src/lib/gemini.ts)  │                 │
-│               └───────────┬───────────┘                 │
-└───────────────────────────┼─────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│                   CircuitMind Frontend                     │
+│               React 19 + TypeScript + Vite 7               │
+│                                                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌─────────────────┐ │
+│  │   Sketch     │  │    Smart     │  │    Agentic      │ │
+│  │  Analyzer    │  │  Generator   │  │    Pipeline     │ │
+│  │ (Multimodal) │  │ (One-liner)  │  │  (4-step agent) │ │
+│  └──────┬───────┘  └──────┬───────┘  └───────┬─────────┘ │
+│         │                 │                   │           │
+│         └─────────────────┼───────────────────┘           │
+│                           │                               │
+│              ┌────────────▼────────────┐                  │
+│              │   Gemini 3 API Client   │                  │
+│              │   (src/lib/gemini.ts)   │                  │
+│              └────────────┬────────────┘                  │
+└───────────────────────────┼───────────────────────────────┘
                             │
                ┌────────────▼────────────┐
                │   Google Gemini 3 API   │
                │                         │
-               │  Step 1: Perceive       │ ← Requirement analysis
-               │  Step 2: Generate       │ ← Structured output (JSON Schema)
-               │  Step 3: Validate       │ ← AI self-review (gemini-3-pro)
-               │  Step 4: Iterate        │ ← Auto-fix critical issues
+               │  Step 1: Perceive       │  ← Requirement analysis
+               │  Step 2: Generate       │  ← Structured output + JSON Schema
+               │  Step 3: Validate       │  ← AI self-review
+               │  Step 4: Iterate        │  ← Auto-fix critical issues
                │                         │
-               │  + Multimodal Vision    │ ← Sketch analysis (gemini-3-pro)
+               │  + Multimodal Vision    │  ← Sketch-to-design
                └─────────────────────────┘
 ```
-
----
-
-## Key Features
-
-- **4-Step Agentic Pipeline** — Autonomous design agent: Perceive -> Generate -> Validate -> Iterate (4+ Gemini API calls per project)
-- **AI Self-Validation** — Gemini 3 Pro reviews its own output for engineering errors and auto-fixes critical issues
-- **AI Sketch Recognition** — Upload a photo of a hand-drawn circuit; Gemini 3 Vision identifies all components and connections
-- **Smart Generate** — Describe your project in one sentence; AI generates the complete specification
-- **3 Alternative Solutions** — Each project generates 3 differentiated circuit architectures for comparison
-- **L1 Architecture Graphs** — Interactive hardware system topology diagrams with ports and signal paths
-- **R&D Workflow** — Swim-lane diagrams with hardware/software/test lanes, milestones, and gate reviews
-- **Real-time Validation** — Voltage mismatch, bus compatibility, and missing component detection
-- **Module Library** — Power, MCU, sensor, interface, and protection module catalog
-- **Circuit Case Library** — 8 reference designs (Arduino, STM32, ESP32, automotive, medical, etc.)
-- **Component Database** — Searchable catalog with datasheets and pricing
-- **Bilingual** — Full English and Chinese (i18n) support
 
 ---
 
@@ -98,45 +118,49 @@ Users photograph hand-drawn circuit sketches. Gemini 3 Vision identifies every c
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | React 19 + TypeScript |
+| Framework | React 19 + TypeScript (strict) |
 | Build | Vite 7 |
 | Styling | Tailwind CSS 3 + CSS Modules |
-| Graph Viz | @xyflow/react (ReactFlow) + dagre |
-| AI | Google Gemini 3 API (Pro + Flash) |
-| Icons | Lucide React + FontAwesome |
-| i18n | react-i18next |
+| Graph Visualization | @xyflow/react (ReactFlow) + dagre |
+| AI Engine | Google Gemini 3 API (`gemini-3-flash-preview`, `gemini-3-pro-preview`) |
+| Icons | Lucide React + FontAwesome 6 |
+| Internationalization | react-i18next |
 | Routing | React Router v7 |
-| Storage | Browser LocalStorage |
+| Persistence | Browser LocalStorage |
+| CI | GitHub Actions (`pnpm lint` + `pnpm build`) |
 
 ---
 
 ## Quick Start
 
 ```bash
-# Clone
-git clone https://github.com/YOUR_USERNAME/circuitmind.git
-cd circuitmind
+# Clone the repository
+git clone https://github.com/ZhanlinCui/CircuitMind.AI.git
+cd CircuitMind.AI
 
-# Install
+# Install dependencies
 pnpm install
 
-# Run
+# Start development server
 pnpm dev
 ```
 
-Open `http://localhost:5173` and configure your Gemini API key in **Settings > AI Compute Config**.
+Open `http://localhost:5173` in your browser.
 
-### Get a Gemini API Key
+### Configure Gemini API Key
 
-1. Go to [Google AI Studio](https://aistudio.google.com/)
-2. Click "Get API Key"
-3. Copy the key and paste it in CircuitMind settings
+1. Go to [Google AI Studio](https://aistudio.google.com/) and get your API key
+2. In CircuitMind, navigate to **Settings → AI Compute Config**
+3. Select **Google Gemini** as provider
+4. Paste your API key and click **Test Connection**
+5. Start creating projects!
 
----
+### Build for Production
 
-## Demo Video
-
-[Watch the 3-minute demo on YouTube/Loom](#) *(link to be added)*
+```bash
+pnpm build    # TypeScript check + Vite build
+pnpm preview  # Preview production build locally
+```
 
 ---
 
@@ -144,37 +168,72 @@ Open `http://localhost:5173` and configure your Gemini API key in **Settings > A
 
 ```
 src/
-├── components/          # Shared components
-│   ├── AppShell.tsx     # Main layout with sidebar
-│   ├── CircuitSketchAnalyzer.tsx  # AI multimodal sketch analysis
-│   ├── ArchitectureGraph/  # L0/L1 graph renderers
-│   ├── WorkflowGraph/     # Circuit workflow visualizer
-│   └── RDWorkflowGraph/   # R&D swim-lane renderer
-├── domain/              # Domain models
-│   ├── workflow.ts      # Workflow types + validation engine
-│   ├── project.ts       # Project + Solution types
-│   └── moduleCatalog.ts # Module library
-├── lib/                 # Utilities
-│   ├── gemini.ts        # Gemini 3 API client + JSON schemas
-│   ├── storage.ts       # LocalStorage + AI config
-│   └── projectsStore.ts # Project CRUD operations
-├── pages/               # Page components
-│   ├── LandingPage.tsx  # Marketing landing page
-│   ├── p-dashboard/     # Dashboard with dynamic stats
-│   ├── p-project_create/ # Project creation + AI features
-│   ├── p-project_detail/ # Solution generation + visualization
-│   ├── p-circuit_cases/  # Circuit reference library
-│   ├── p-component_db/   # Component database
-│   └── p-user_profile/   # Settings + Gemini API config
-└── locales/             # i18n translations (en/zh)
+├── components/                    # Shared UI components
+│   ├── AppShell.tsx               # Main layout (sidebar + header)
+│   ├── CircuitSketchAnalyzer.tsx  # Multimodal AI sketch analysis
+│   ├── ArchitectureGraph/         # L0/L1 architecture renderers
+│   ├── WorkflowGraph/             # Circuit workflow visualizer
+│   ├── RDWorkflowGraph/           # R&D swim-lane renderer
+│   └── ui/                        # Design system primitives
+├── domain/                        # Domain models & business logic
+│   ├── workflow.ts                # Workflow types + validation engine
+│   ├── project.ts                 # Project + Solution types (L1, R&D, BOM)
+│   └── moduleCatalog.ts           # Module library catalog
+├── lib/                           # Core utilities
+│   ├── gemini.ts                  # Gemini 3 API client + agentic pipeline
+│   ├── storage.ts                 # LocalStorage + AI config management
+│   └── projectsStore.ts           # Project CRUD operations
+├── pages/                         # Route-level page components
+│   ├── LandingPage.tsx            # Dark premium landing page
+│   ├── p-dashboard/               # Dashboard with AI status + stats
+│   ├── p-project_create/          # Smart Generate + Sketch Analyzer
+│   ├── p-project_detail/          # Agentic pipeline + solution viewer
+│   ├── p-circuit_cases/           # Circuit reference library
+│   ├── p-component_db/            # Component database
+│   └── p-user_profile/            # Settings + Gemini API config
+├── locales/                       # i18n translations
+│   ├── en/translation.json        # English (default)
+│   └── zh/translation.json        # Chinese
+└── router/                        # React Router configuration
 ```
 
 ---
 
-## License
+## Demo
 
-MIT
+> **[Watch the 3-minute demo video](#)** *(link to be added)*
+
+### Quick Demo Steps
+
+1. Open CircuitMind → Click **"Try Live Demo"**
+2. You'll see a pre-filled prompt: *"A portable air quality monitor..."*
+3. Click **Generate** — watch the 4-step pipeline in action
+4. Review 3 generated solutions with L1 architecture and R&D workflow
+5. Try **Sketch Recognition**: upload any hand-drawn circuit photo
 
 ---
 
-*Built with Gemini 3 for the Google DeepMind Hackathon 2026*
+## Judging Criteria Alignment
+
+| Criteria | Weight | How CircuitMind Addresses It |
+|----------|--------|------------------------------|
+| **Technical Execution** | 40% | 4-step agentic pipeline with 4+ Gemini API calls, JSON Schema structured output, TypeScript strict mode, CI pipeline |
+| **Innovation / Wow Factor** | 30% | Self-validating AI agent (not a prompt wrapper), multimodal sketch-to-design, autonomous error correction |
+| **Potential Impact** | 20% | Democratizes hardware design for students/makers, reduces circuit design iteration from days to minutes |
+| **Presentation / Demo** | 10% | Professional landing page, architecture diagram, bilingual docs, clear 3-minute demo flow |
+
+---
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+[MIT](./LICENSE)
+
+---
+
+<p align="center">
+  <strong>Built with Google Gemini 3 for the <a href="https://gemini3.devpost.com/">Google DeepMind Hackathon 2026</a></strong>
+</p>
