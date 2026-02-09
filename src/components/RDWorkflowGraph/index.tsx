@@ -7,7 +7,7 @@ interface RDWorkflowGraphProps {
 }
 
 const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) => {
-  // 计算每个泳道的节点
+  // Compute nodes per lane
   const getLaneNodes = (laneId: string) => {
     return data.nodes.filter(node => node.laneId === laneId);
   };
@@ -17,13 +17,13 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
       {/* 门禁展示 */}
       {data.gates && data.gates.length > 0 && (
         <div className="mb-6">
-          <h3 className="font-semibold text-lg mb-3">阶段门禁</h3>
+          <h3 className="font-semibold text-lg mb-3">Stage Gates</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {data.gates.map((gate) => (
               <div key={gate.id} className="border-2 border-purple-500 rounded-lg p-3 bg-purple-50">
                 <div className="font-semibold text-purple-900 mb-2">{gate.name}</div>
                 <div className="text-xs space-y-1">
-                  <div className="font-medium text-gray-700">验收标准：</div>
+                  <div className="font-medium text-gray-700">Acceptance Criteria：</div>
                   <ul className="list-disc list-inside text-gray-600">
                     {gate.criteria.map((criterion, idx) => (
                       <li key={idx}>{criterion}</li>
@@ -31,7 +31,7 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
                   </ul>
                   {gate.evidence.length > 0 && (
                     <>
-                      <div className="font-medium text-gray-700 mt-2">证据：</div>
+                      <div className="font-medium text-gray-700 mt-2">Evidence：</div>
                       <ul className="list-disc list-inside text-gray-600">
                         {gate.evidence.map((ev, idx) => (
                           <li key={idx}>{ev}</li>
@@ -48,7 +48,7 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
 
       {/* 泳道图 */}
       <div className="border rounded-lg overflow-hidden">
-        <h3 className="font-semibold text-lg p-4 bg-gray-50 border-b">研发工作流</h3>
+        <h3 className="font-semibold text-lg p-4 bg-gray-50 border-b">R&D Workflow</h3>
 
         <div className="relative">
           {data.lanes.map((lane, laneIdx) => {
@@ -68,7 +68,7 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
                   <div className="flex-1 p-4">
                     <div className="flex gap-4 overflow-x-auto pb-2">
                       {laneNodes.length === 0 ? (
-                        <div className="text-gray-400 text-sm italic">无任务</div>
+                        <div className="text-gray-400 text-sm italic">No tasks</div>
                       ) : (
                         laneNodes.map((node, nodeIdx) => {
                           return (
@@ -79,30 +79,30 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
                                   {node.name}
                                 </div>
 
-                                {/* 输入 */}
+                                {/* Inputs */}
                                 {node.inputs.length > 0 && (
                                   <div className="mb-2">
-                                    <div className="text-xs font-medium text-gray-600">输入：</div>
+                                    <div className="text-xs font-medium text-gray-600">Inputs：</div>
                                     <div className="text-xs text-gray-700">
                                       {node.inputs.join(', ')}
                                     </div>
                                   </div>
                                 )}
 
-                                {/* 输出 */}
+                                {/* Outputs */}
                                 {node.outputs.length > 0 && (
                                   <div className="mb-2">
-                                    <div className="text-xs font-medium text-gray-600">输出：</div>
+                                    <div className="text-xs font-medium text-gray-600">Outputs：</div>
                                     <div className="text-xs text-gray-700">
                                       {node.outputs.join(', ')}
                                     </div>
                                   </div>
                                 )}
 
-                                {/* 验收标准 */}
+                                {/* Acceptance Criteria */}
                                 {node.acceptance.length > 0 && (
                                   <div className="mb-2">
-                                    <div className="text-xs font-medium text-gray-600">验收：</div>
+                                    <div className="text-xs font-medium text-gray-600">Acceptance：</div>
                                     <ul className="text-xs text-gray-700 list-disc list-inside">
                                       {node.acceptance.map((acc, idx) => (
                                         <li key={idx}>{acc}</li>
@@ -135,19 +135,19 @@ const RDWorkflowGraph: React.FC<RDWorkflowGraphProps> = ({ data, className }) =>
         </div>
       </div>
 
-      {/* 依赖关系说明 */}
+      {/* Dependencies说明 */}
       {data.edges.length > 0 && (
         <div className="mt-6">
-          <h3 className="font-semibold text-sm mb-2 text-gray-700">依赖关系</h3>
+          <h3 className="font-semibold text-sm mb-2 text-gray-700">Dependencies</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-xs">
             {data.edges.map((edge, idx) => {
               const fromNode = data.nodes.find(n => n.id === edge.fromNodeId);
               const toNode = data.nodes.find(n => n.id === edge.toNodeId);
 
               const relationText = {
-                depends_on: '依赖',
-                produces: '产出',
-                verifies: '验证',
+                depends_on: 'Depends on',
+                produces: 'Produces',
+                verifies: 'Verifies',
               }[edge.relation];
 
               return (

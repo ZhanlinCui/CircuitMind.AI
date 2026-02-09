@@ -33,7 +33,7 @@ const GroupNode: React.FC<{ data: { label: string; summary?: string; nodeType: s
       {data.summary && (
         <div className='text-xs text-purple-600 mb-2'>{data.summary}</div>
       )}
-      <div className='text-xs text-purple-500 italic'>功能模块</div>
+      <div className='text-xs text-purple-500 italic'>Module</div>
     </div>
   );
 };
@@ -277,11 +277,11 @@ const L1Graph: React.FC<L1GraphProps> = ({ data, className, onNodeClick, onEdgeC
 
       <div className='absolute top-4 right-4 bg-white rounded-lg shadow-lg p-3 text-xs space-y-3'>
         <div>
-          <div className='font-semibold mb-2'>层次结构</div>
+          <div className='font-semibold mb-2'>Hierarchy</div>
           <div className='space-y-1'>
             <div className='flex items-center gap-2'>
               <div className='w-4 h-4 border-2 border-dashed border-purple-400 bg-purple-50'></div>
-              <span>功能模块（容器）</span>
+              <span>Module（container）</span>
             </div>
             <div className='flex items-center gap-2'>
               <div className='w-4 h-4 border-2 border-indigo-500 bg-white'></div>
@@ -291,19 +291,19 @@ const L1Graph: React.FC<L1GraphProps> = ({ data, className, onNodeClick, onEdgeC
         </div>
 
         <div className='border-t pt-2'>
-          <div className='font-semibold mb-2'>端口类型</div>
+          <div className='font-semibold mb-2'>Port Type</div>
           <div className='space-y-1'>
             <div className='flex items-center gap-2'>
               <div className='w-2 h-2 rounded-full bg-green-500'></div>
-              <span>输入</span>
+              <span>Input</span>
             </div>
             <div className='flex items-center gap-2'>
               <div className='w-2 h-2 rounded-full bg-blue-500'></div>
-              <span>输出</span>
+              <span>Output</span>
             </div>
             <div className='flex items-center gap-2'>
               <div className='w-2 h-2 rounded-full bg-purple-500'></div>
-              <span>双向</span>
+              <span>Bidirectional</span>
             </div>
           </div>
         </div>

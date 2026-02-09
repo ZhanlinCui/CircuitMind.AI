@@ -192,15 +192,15 @@ const L0Graph: React.FC<L0GraphProps> = ({
       </ReactFlow>
 
       <div className='absolute top-4 right-4 bg-white rounded-lg shadow-lg p-3 text-xs'>
-        <div className='font-semibold mb-2'>连接类型</div>
+        <div className='font-semibold mb-2'>Connection Type</div>
         <div className='space-y-1'>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 bg-red-500'></div>
-            <span>电源</span>
+            <span>Power</span>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 border-t-2 border-dashed border-blue-500'></div>
-            <span>总线</span>
+            <span>Bus</span>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 bg-green-500'></div>
@@ -208,19 +208,19 @@ const L0Graph: React.FC<L0GraphProps> = ({
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 border-t-2 border-dashed border-purple-500'></div>
-            <span>射频</span>
+            <span>RF</span>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 border-t-2 border-dashed border-cyan-500'></div>
-            <span>网络</span>
+            <span>Network</span>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 bg-orange-500'></div>
-            <span>调试</span>
+            <span>Debug</span>
           </div>
           <div className='flex items-center gap-2'>
             <div className='w-8 h-0.5 border-t-2 border-dotted border-gray-500'></div>
-            <span>依赖</span>
+            <span>Dependency</span>
           </div>
         </div>
       </div>

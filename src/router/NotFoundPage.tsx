@@ -61,12 +61,12 @@ const NotFoundPage: React.FC = () => {
   return (
     <div style={containerStyle}>
       <h1 style={headingStyle}>404</h1>
-      <p style={textStyle}>页面未找到</p>
+      <p style={textStyle}>Page Not Found</p>
       <p style={subTextStyle}>
         抱歉！您访问的页面不存在，当前页面功能待完善。
       </p>
       <button onClick={goBack} style={buttonStyle}>
-        返回上一页
+        Go Back
       </button>
     </div>
   );

@@ -22,7 +22,7 @@ export default function ErrorPage() {
     if (!import.meta.env.DEV) {
       return;
     }
-    // send_error_message_to_parent_window 向父窗口发送错误信息
+    // send error to parent window
     if (typeof window === 'object' && window.parent) {
       window.parent.postMessage({
         type: 'chux:error',
@@ -90,13 +90,13 @@ export default function ErrorPage() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={headingStyle}>出错了!</h1>
-      <p style={textStyle}>抱歉，发生了错误，页面无法显示。</p>
+      <h1 style={headingStyle}>Something went wrong!</h1>
+      <p style={textStyle}>Sorry, an error occurred and the page cannot be displayed.</p>
       <p style={subTextStyle}>
-        {error.statusText || error.message || '未知错误'}
+        {error.statusText || error.message || 'Unknown error'}
       </p>
       <button onClick={goBack} style={buttonStyle}>
-        返回上一页
+        Go Back
       </button>
     </div>
   );
