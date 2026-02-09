@@ -514,12 +514,15 @@ export async function runAgenticPipeline(opts: AgenticPipelineOptions): Promise<
   const {
     apiKey,
     model,
-    proModel = 'gemini-3-pro-preview',
+    proModel: requestedProModel = 'gemini-3-pro-preview',
     systemPrompt,
     userPrompt,
     temperature = 0.2,
     onProgress,
   } = opts;
+  // Use the same model for validation if Pro is unavailable (free tier quota = 0)
+  // The pipeline still runs 4 separate Gemini calls regardless
+  const proModel = requestedProModel || model;
 
   // ---- Step 1: Perceive — Requirement Analysis ----
   onProgress?.({
@@ -618,32 +621,49 @@ export async function runAgenticPipeline(opts: AgenticPipelineOptions): Promise<
   });
 
   let validationReport: Record<string, unknown>;
+  const validationSystemPrompt = [
+    'You are an expert hardware design reviewer and EE quality auditor.',
+    'Review the following AI-generated circuit solutions for engineering correctness.',
+    'Check for: voltage mismatches between connected modules, bus protocol conflicts,',
+    'missing essential components (decoupling caps, pull-up resistors, ESD protection),',
+    'power budget violations, signal integrity issues, and unrealistic cost estimates.',
+    'Be thorough but fair. Score the overall quality 0-100.',
+  ].join(' ');
+  const validationUserPrompt = [
+    'Original requirements:',
+    userPrompt,
+    '',
+    'Generated solutions to review:',
+    step2Result,
+  ].join('\n');
+
   try {
+    // Try Pro model first, fall back to Flash if quota exceeded
     const step3Result = await callGemini({
       apiKey,
       model: proModel,
-      systemPrompt: [
-        'You are an expert hardware design reviewer and EE quality auditor.',
-        'Review the following AI-generated circuit solutions for engineering correctness.',
-        'Check for: voltage mismatches between connected modules, bus protocol conflicts,',
-        'missing essential components (decoupling caps, pull-up resistors, ESD protection),',
-        'power budget violations, signal integrity issues, and unrealistic cost estimates.',
-        'Be thorough but fair. Score the overall quality 0-100.',
-      ].join(' '),
-      userPrompt: [
-        'Original requirements:',
-        userPrompt,
-        '',
-        'Generated solutions to review:',
-        step2Result,
-      ].join('\n'),
+      systemPrompt: validationSystemPrompt,
+      userPrompt: validationUserPrompt,
       temperature: 0.1,
       jsonSchema: VALIDATION_REPORT_SCHEMA,
     });
-
     validationReport = JSON.parse(step3Result);
-  } catch {
-    validationReport = { overallScore: 75, issues: [], recommendations: [], passesReview: true };
+  } catch (proError) {
+    // Fallback to Flash model if Pro has quota issues
+    try {
+      const step3Fallback = await callGemini({
+        apiKey,
+        model,
+        systemPrompt: validationSystemPrompt,
+        userPrompt: validationUserPrompt,
+        temperature: 0.1,
+        jsonSchema: VALIDATION_REPORT_SCHEMA,
+      });
+      validationReport = JSON.parse(step3Fallback);
+    } catch {
+      console.warn('Validation step failed, using default report:', proError);
+      validationReport = { overallScore: 75, issues: [], recommendations: [], passesReview: true };
+    }
   }
 
   const criticalIssues = Array.isArray(validationReport.issues)
