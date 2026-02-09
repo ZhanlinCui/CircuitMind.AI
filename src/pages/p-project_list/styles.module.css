@@ -1,0 +1,147 @@
+
+
+.pageWrapper {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+}
+
+.sidebarTransition {
+  transition: all 0.3s ease-in-out;
+}
+
+.cardHover:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.navItemActive {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.navItem:hover {
+  background-color: #334155;
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.searchFocus:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tableRow:hover {
+  background-color: #F8FAFC;
+  transition: all 0.3s ease;
+}
+
+.gradientText {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btnPrimary:hover {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.btnSecondary {
+  background-color: #F1F5F9;
+  color: #3B82F6;
+  border: 1px solid #E2E8F0;
+  transition: all 0.3s ease;
+}
+
+.btnSecondary:hover {
+  background-color: #E2E8F0;
+  border-color: #CBD5E1;
+}
+
+.btnDanger {
+  background-color: #EF4444;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btnDanger:hover {
+  background-color: #DC2626;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.dropdownMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #374151;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.dropdownMenu.show {
+  display: block;
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #374151;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  transition: all 0.3s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #F8FAFC;
+  color: #3B82F6;
+}
+
+.paginationItem {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #6B7280;
+  background-color: #fff;
+  border: 1px solid #E2E8F0;
+  transition: all 0.3s ease;
+}
+
+.paginationItem:hover {
+  background-color: #F8FAFC;
+  color: #3B82F6;
+  border-color: #CBD5E1;
+}
+
+.paginationItemActive {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white;
+  border-color: #3B82F6;
+}
+

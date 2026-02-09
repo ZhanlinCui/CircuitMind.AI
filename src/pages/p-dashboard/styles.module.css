@@ -1,0 +1,50 @@
+
+
+.pageWrapper {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+}
+
+.sidebarTransition {
+  transition: all 0.3s ease-in-out;
+}
+
+.cardHover:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.navItemActive {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.navItem:hover {
+  background-color: #334155;
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.searchFocus:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.statusIndicator {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.gradientText {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+

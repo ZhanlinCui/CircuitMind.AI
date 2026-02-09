@@ -1,0 +1,107 @@
+
+
+.pageWrapper {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+}
+
+.sidebarTransition {
+  transition: all 0.3s ease-in-out;
+}
+
+.navItemActive {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.navItem:hover {
+  background-color: #334155;
+  color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.searchFocus:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.settingItemActive,
+.settingItemActive:hover {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  color: white !important;
+}
+
+.settingItemActive i,
+.settingItemActive span {
+  color: white !important;
+}
+
+/* 桌面端特有的左侧边框和布局优化 */
+@media (min-width: 1024px) {
+  .settingItemActive {
+    border-left: 4px solid #8B5CF6;
+  }
+
+  .settingItem {
+    white-space: normal !important; /* 允许英文换行 */
+    word-break: break-word;
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.4;
+  }
+
+  .settingItem i {
+    margin-top: 3px; /* 图标对齐换行后的文字 */
+  }
+}
+
+.settingList {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.settingList::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* 非选中项的悬浮效果 */
+.settingItem:hover:not(.settingItemActive) {
+  background-color: #F1F5F9;
+  transition: all 0.3s ease;
+}
+
+.settingItem:hover:not(.settingItemActive) i,
+.settingItem:hover:not(.settingItemActive) span {
+  color: #3B82F6 !important;
+}
+
+.formInputFocus:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.gradientText {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.successMessage {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
