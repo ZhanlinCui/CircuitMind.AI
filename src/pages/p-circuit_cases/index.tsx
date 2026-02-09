@@ -15,7 +15,7 @@ const CircuitCasesPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // 状态管理
+  // State
   const [caseSearchValue, setCaseSearchValue] = useState('');
   const [applicationFilter, setApplicationFilter] = useState('');
   const [complexityFilter, setComplexityFilter] = useState('');
@@ -25,216 +25,216 @@ const CircuitCasesPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
-  // 设置页面标题
+  // Page title
   useEffect(() => {
     const originalTitle = document.title;
     document.title = `${t('circuit_cases.page_title')} - PCBTool.AI`;
     return () => { document.title = originalTitle; };
   }, [t]);
 
-  // 案例数据库
+  // Case database
   const caseDatabase: CaseDatabase = {
     'case-001': {
       id: 'case-001',
-      name: 'Arduino智能家居控制板',
-      application: '物联网',
-      complexity: '简单',
-      description: '基于Arduino Uno的智能家居控制解决方案，支持灯光控制、窗帘控制、温度监测和远程控制功能。该方案采用模块化设计，易于扩展和维护，适合初学者和DIY爱好者使用。',
+      name: 'Arduino Smart Home Controller',
+      application: 'IoT',
+      complexity: 'Simple',
+      description: 'Arduino Uno-based smart home control solution supporting light control, curtain control, temperature monitoring and remote control. Modular design, easy to expand.',
       image: 'https://s.coze.cn/image/RRDWKbOoqjk/',
       date: '2024-01-15',
       views: '1,234',
       components: [
-        { name: 'Arduino Uno', type: '主控芯片' },
-        { name: 'ESP8266', type: 'WiFi模块' },
-        { name: '继电器模块', type: '执行器' },
-        { name: 'DHT11', type: '温湿度传感器' }
+        { name: 'Arduino Uno', type: 'MCU' },
+        { name: 'ESP8266', type: 'WiFi Module' },
+        { name: 'Relay Module', type: 'Actuator' },
+        { name: 'DHT11', type: 'Temp/Humidity Sensor' }
       ],
       files: [
-        { name: '原理图.pdf', size: '2.3 MB' },
-        { name: 'PCB布局文件.kicad_pcb', size: '1.8 MB' },
-        { name: '源代码.ino', size: '15 KB' },
-        { name: 'BOM清单.xlsx', size: '8 KB' }
+        { name: 'Schematic.pdf', size: '2.3 MB' },
+        { name: 'PCB_Layout.kicad_pcb', size: '1.8 MB' },
+        { name: 'Source_Code.ino', size: '15 KB' },
+        { name: 'BOM_List.xlsx', size: '8 KB' }
       ]
     },
     'case-002': {
       id: 'case-002',
-      name: 'STM32工业控制模块',
-      application: '工业控制',
-      complexity: '中等',
-      description: '高性能工业控制解决方案，基于STM32F4系列微控制器，支持多种传感器接口和通信协议。该模块设计用于恶劣工业环境，具有高可靠性和稳定性。',
+      name: 'STM32 Industrial Controller',
+      application: 'Industrial',
+      complexity: 'Medium',
+      description: 'High-performance industrial control solution based on STM32F4, supporting multiple sensor interfaces and communication protocols. Designed for harsh industrial environments.',
       image: 'https://s.coze.cn/image/5p-8fubtpbU/',
       date: '2024-01-12',
       views: '856',
       components: [
-        { name: 'STM32F407', type: '主控芯片' },
-        { name: 'RS485模块', type: '通信接口' },
-        { name: 'ADC模块', type: '模拟输入' },
-        { name: 'DAC模块', type: '模拟输出' }
+        { name: 'STM32F407', type: 'MCU' },
+        { name: 'RS485模块', type: 'Comm Interface' },
+        { name: 'ADC模块', type: 'Analog Input' },
+        { name: 'DAC模块', type: 'Analog Output' }
       ],
       files: [
-        { name: '原理图.pdf', size: '4.1 MB' },
-        { name: 'PCB布局文件.altium', size: '3.2 MB' },
-        { name: '固件源代码.zip', size: '120 KB' },
-        { name: '用户手册.pdf', size: '1.5 MB' }
+        { name: 'Schematic.pdf', size: '4.1 MB' },
+        { name: 'PCB_Layout.altium', size: '3.2 MB' },
+        { name: 'Firmware.zip', size: '120 KB' },
+        { name: 'User_Manual.pdf', size: '1.5 MB' }
       ]
     },
     'case-003': {
       id: 'case-003',
-      name: 'ESP32环境监测节点',
-      application: '物联网',
-      complexity: '简单',
-      description: '低功耗物联网环境监测设备，支持温湿度、PM2.5、光照等多种传感器',
+      name: 'ESP32 Environment Monitor',
+      application: 'IoT',
+      complexity: 'Simple',
+      description: 'Low-power IoT environment monitoring device supporting temperature, humidity, PM2.5, and light sensors',
       image: 'https://s.coze.cn/image/oM1GUrRi33Q/',
       date: '2024-01-10',
       views: '678',
       components: [
-        { name: 'ESP32', type: '主控芯片' },
-        { name: 'BME280', type: '温湿度传感器' },
-        { name: 'PMS5003', type: 'PM2.5传感器' },
-        { name: 'BH1750', type: '光照传感器' }
+        { name: 'ESP32', type: 'MCU' },
+        { name: 'BME280', type: 'Temp/Humidity Sensor' },
+        { name: 'PMS5003', type: 'PM2.5 Sensor' },
+        { name: 'BH1750', type: 'Light Sensor' }
       ],
       files: [
-        { name: '原理图.pdf', size: '1.8 MB' },
-        { name: 'PCB布局文件.kicad_pcb', size: '1.5 MB' },
-        { name: '源代码.zip', size: '25 KB' },
-        { name: 'BOM清单.xlsx', size: '7 KB' }
+        { name: 'Schematic.pdf', size: '1.8 MB' },
+        { name: 'PCB_Layout.kicad_pcb', size: '1.5 MB' },
+        { name: 'Source_Code.zip', size: '25 KB' },
+        { name: 'BOM_List.xlsx', size: '7 KB' }
       ]
     },
     'case-004': {
       id: 'case-004',
-      name: '锂电池充电管理',
-      application: '电源管理',
-      complexity: '简单',
-      description: '安全可靠的锂电池充电解决方案，支持多种电池类型和保护功能',
+      name: 'Li-Battery Charge Manager',
+      application: 'Power Mgmt',
+      complexity: 'Simple',
+      description: 'Safe and reliable lithium battery charging solution supporting multiple battery types and protection features',
       image: 'https://s.coze.cn/image/2iFNEpdW_Xw/',
       date: '2024-01-08',
       views: '456',
       components: [
-        { name: 'TP4056', type: '充电管理芯片' },
-        { name: 'DW01', type: '保护芯片' },
-        { name: 'FS8205A', type: 'MOS管' },
-        { name: 'LED指示灯', type: '状态指示' }
+        { name: 'TP4056', type: 'Charge IC' },
+        { name: 'DW01', type: 'Protection IC' },
+        { name: 'FS8205A', type: 'MOSFET' },
+        { name: 'LED Indicator', type: 'Status Indicator' }
       ],
       files: [
-        { name: '原理图.pdf', size: '1.2 MB' },
-        { name: 'PCB布局文件.kicad_pcb', size: '950 KB' },
-        { name: 'BOM清单.xlsx', size: '5 KB' }
+        { name: 'Schematic.pdf', size: '1.2 MB' },
+        { name: 'PCB_Layout.kicad_pcb', size: '950 KB' },
+        { name: 'BOM_List.xlsx', size: '5 KB' }
       ]
     },
     'case-005': {
       id: 'case-005',
-      name: '汽车CAN总线通信模块',
-      application: '汽车电子',
-      complexity: '复杂',
-      description: '符合汽车级标准的CAN总线通信解决方案，支持高可靠性数据传输',
+      name: 'Automotive CAN Bus Module',
+      application: 'Automotive',
+      complexity: 'Complex',
+      description: 'Automotive-grade CAN bus communication solution with high-reliability data transmission',
       image: 'https://s.coze.cn/image/8y0nYPPQxNo/',
       date: '2024-01-05',
       views: '923',
       components: [
-        { name: 'STM32F103', type: '主控芯片' },
-        { name: 'MCP2551', type: 'CAN收发器' },
-        { name: 'TJA1050', type: 'CAN控制器' },
-        { name: 'TVS二极管', type: '保护器件' }
+        { name: 'STM32F103', type: 'MCU' },
+        { name: 'MCP2551', type: 'CAN Transceiver' },
+        { name: 'TJA1050', type: 'CAN Controller' },
+        { name: 'TVS Diode', type: 'Protection' }
       ],
       files: [
-        { name: '原理图.pdf', size: '3.5 MB' },
-        { name: 'PCB布局文件.altium', size: '2.8 MB' },
-        { name: '固件源代码.zip', size: '85 KB' },
-        { name: '测试报告.pdf', size: '2.1 MB' }
+        { name: 'Schematic.pdf', size: '3.5 MB' },
+        { name: 'PCB_Layout.altium', size: '2.8 MB' },
+        { name: 'Firmware_Source.zip', size: '85 KB' },
+        { name: 'Test_Report.pdf', size: '2.1 MB' }
       ]
     },
     'case-006': {
       id: 'case-006',
-      name: '心率监测医疗设备',
-      application: '医疗电子',
-      complexity: '中等',
-      description: '高精度医疗级心率监测解决方案，符合相关医疗认证标准',
+      name: 'Heart Rate Medical Device',
+      application: 'Medical',
+      complexity: 'Medium',
+      description: 'High-precision medical-grade heart rate monitoring solution, compliant with medical certification standards',
       image: 'https://s.coze.cn/image/bcwJhe-QiNo/',
       date: '2024-01-03',
       views: '745',
       components: [
-        { name: 'MAX30102', type: '心率传感器' },
-        { name: 'nRF52832', type: '蓝牙MCU' },
-        { name: 'LIS2DH12', type: '加速度传感器' },
-        { name: 'CR2032', type: '电池' }
+        { name: 'MAX30102', type: 'Heart Rate Sensor' },
+        { name: 'nRF52832', type: 'BLE MCU' },
+        { name: 'LIS2DH12', type: 'Accelerometer' },
+        { name: 'CR2032', type: 'Battery' }
       ],
       files: [
-        { name: '原理图.pdf', size: '2.7 MB' },
-        { name: 'PCB布局文件.kicad_pcb', size: '2.1 MB' },
-        { name: '固件源代码.zip', size: '65 KB' },
-        { name: '医疗认证报告.pdf', size: '4.2 MB' }
+        { name: 'Schematic.pdf', size: '2.7 MB' },
+        { name: 'PCB_Layout.kicad_pcb', size: '2.1 MB' },
+        { name: 'Firmware_Source.zip', size: '65 KB' },
+        { name: 'Medical_Cert_Report.pdf', size: '4.2 MB' }
       ]
     },
     'case-007': {
       id: 'case-007',
-      name: '蓝牙音响功放电路',
-      application: '消费电子',
-      complexity: '简单',
-      description: '高保真蓝牙音响解决方案，支持多种音频格式和音效处理',
+      name: 'Bluetooth Audio Amplifier',
+      application: 'Consumer',
+      complexity: 'Simple',
+      description: 'Hi-fi Bluetooth speaker solution with multi-format audio support and DSP effects processing',
       image: 'https://s.coze.cn/image/JOHE_y8-OLg/',
       date: '2024-01-01',
       views: '1,123',
       components: [
-        { name: 'CSR8675', type: '蓝牙芯片' },
-        { name: 'TPA3116D2', type: '功放芯片' },
-        { name: 'NE5532', type: '运放芯片' },
-        { name: 'RC滤波器', type: '音频处理' }
+        { name: 'CSR8675', type: 'BT Chip' },
+        { name: 'TPA3116D2', type: 'Amplifier IC' },
+        { name: 'NE5532', type: 'Op-Amp IC' },
+        { name: 'RC Filter', type: 'Audio DSP' }
       ],
       files: [
-        { name: '原理图.pdf', size: '2.2 MB' },
-        { name: 'PCB布局文件.altium', size: '1.8 MB' },
-        { name: '固件源代码.zip', size: '45 KB' },
-        { name: 'BOM清单.xlsx', size: '6 KB' }
+        { name: 'Schematic.pdf', size: '2.2 MB' },
+        { name: 'PCB_Layout.altium', size: '1.8 MB' },
+        { name: 'Firmware_Source.zip', size: '45 KB' },
+        { name: 'BOM_List.xlsx', size: '6 KB' }
       ]
     },
     'case-008': {
       id: 'case-008',
-      name: 'PLC控制模块',
-      application: '工业控制',
-      complexity: '复杂',
-      description: '工业级PLC控制解决方案，支持多种输入输出接口和通信协议',
+      name: 'PLC Control Module',
+      application: 'Industrial',
+      complexity: 'Complex',
+      description: 'Industrial PLC control solution with multiple I/O interfaces and communication protocols',
       image: 'https://s.coze.cn/image/BHLiWf1QxIk/',
       date: '2023-12-28',
       views: '654',
       components: [
-        { name: 'S7-1200', type: 'PLC控制器' },
-        { name: 'SM 1223', type: '数字量I/O模块' },
-        { name: 'SM 1231', type: '模拟量输入模块' },
-        { name: 'SM 1232', type: '模拟量输出模块' }
+        { name: 'S7-1200', type: 'PLC Controller' },
+        { name: 'SM 1223', type: 'Digital I/O Module' },
+        { name: 'SM 1231', type: 'Analog Input Module' },
+        { name: 'SM 1232', type: 'Analog Output Module' }
       ],
       files: [
-        { name: '系统配置图.pdf', size: '3.8 MB' },
-        { name: '梯形图程序.zip', size: '120 KB' },
-        { name: '用户手册.pdf', size: '2.5 MB' },
-        { name: '接线图.pdf', size: '1.8 MB' }
+        { name: 'System_Config.pdf', size: '3.8 MB' },
+        { name: 'Ladder_Program.zip', size: '120 KB' },
+        { name: 'User_Manual.pdf', size: '2.5 MB' },
+        { name: 'Wiring_Diagram.pdf', size: '1.8 MB' }
       ]
     }
   };
 
-  // 获取应用领域样式类
+  // Application domain class
   const getApplicationClass = (application: string): string => {
     const classes: { [key: string]: string } = {
-      '物联网': 'px-2 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-xs font-medium',
-      '工业控制': 'px-2 py-1 bg-warning bg-opacity-10 text-warning rounded-full text-xs font-medium',
-      '汽车电子': 'px-2 py-1 bg-danger bg-opacity-10 text-danger rounded-full text-xs font-medium',
-      '医疗电子': 'px-2 py-1 bg-secondary bg-opacity-10 text-secondary rounded-full text-xs font-medium',
-      '消费电子': 'px-2 py-1 bg-info bg-opacity-10 text-info rounded-full text-xs font-medium',
-      '电源管理': 'px-2 py-1 bg-tertiary bg-opacity-10 text-tertiary rounded-full text-xs font-medium'
+      'IoT': 'px-2 py-1 bg-primary bg-opacity-10 text-primary rounded-full text-xs font-medium',
+      'Industrial': 'px-2 py-1 bg-warning bg-opacity-10 text-warning rounded-full text-xs font-medium',
+      'Automotive': 'px-2 py-1 bg-danger bg-opacity-10 text-danger rounded-full text-xs font-medium',
+      'Medical': 'px-2 py-1 bg-secondary bg-opacity-10 text-secondary rounded-full text-xs font-medium',
+      'Consumer': 'px-2 py-1 bg-info bg-opacity-10 text-info rounded-full text-xs font-medium',
+      'Power Mgmt': 'px-2 py-1 bg-tertiary bg-opacity-10 text-tertiary rounded-full text-xs font-medium'
     };
     return classes[application] || 'px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium';
   };
 
-  // 获取复杂度样式类
+  // Complexity class
   const getComplexityClass = (complexity: string): string => {
     const classes: { [key: string]: string } = {
-      '简单': 'px-2 py-1 bg-success bg-opacity-10 text-success rounded-full text-xs font-medium',
-      '中等': 'px-2 py-1 bg-warning bg-opacity-10 text-warning rounded-full text-xs font-medium',
-      '复杂': 'px-2 py-1 bg-danger bg-opacity-10 text-danger rounded-full text-xs font-medium'
+      'Simple': 'px-2 py-1 bg-success bg-opacity-10 text-success rounded-full text-xs font-medium',
+      'Medium': 'px-2 py-1 bg-warning bg-opacity-10 text-warning rounded-full text-xs font-medium',
+      'Complex': 'px-2 py-1 bg-danger bg-opacity-10 text-danger rounded-full text-xs font-medium'
     };
     return classes[complexity] || 'px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium';
   };
 
-  // 案例搜索处理
+  // Search handler
   const handleCaseSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       performSearch();
@@ -244,7 +244,7 @@ const CircuitCasesPage: React.FC = () => {
   const performSearch = () => {
     const searchTerm = caseSearchValue.trim();
     
-    console.log('搜索案例:', {
+    console.log('Search cases:', {
       searchTerm,
       applicationFilter,
       complexityFilter
@@ -257,7 +257,7 @@ const CircuitCasesPage: React.FC = () => {
     }, 1000);
   };
 
-  // 案例卡片点击处理
+  // Card click handler
   const handleCaseCardClick = (caseId: string) => {
     const caseData = caseDatabase[caseId];
     if (caseData) {
@@ -266,48 +266,48 @@ const CircuitCasesPage: React.FC = () => {
     }
   };
 
-  // 关闭模态弹窗
+  // Close modal
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setSelectedCaseData(null);
   };
 
-  // 应用案例到项目
+  // Apply case to project
   const handleUseCase = () => {
     if (!selectedCaseData) return;
     
-    // 创建一个基于案例的新项目
+    // Create project from case
     const workflow = createEmptyWorkflow();
     
-    // 默认添加 USB 电源
+    // Add USB power by default
     const powerModule = getModuleById(MODULE_CATALOG, 'power_usb_5v');
     if (powerModule) {
       workflow.nodes.push({
         id: createId('node'),
         moduleId: powerModule.id,
-        label: 'USB电源',
+        label: 'USB Power',
       });
     }
 
-    // 如果是 ESP32 案例，添加 ESP32
+    // Add ESP32 if applicable
     if (selectedCaseData.name.includes('ESP32') || selectedCaseData.components.some(c => c.name.includes('ESP32'))) {
       const mcu = getModuleById(MODULE_CATALOG, 'mcu_esp32_wroom');
       if (mcu) {
         workflow.nodes.push({
           id: createId('node'),
           moduleId: mcu.id,
-          label: 'ESP32主控',
+          label: 'ESP32 MCU',
         });
       }
          
-      // 还可以尝试添加 BME280 如果有
-      if (selectedCaseData.components.some(c => c.name.includes('BME280') || c.name.includes('温湿度'))) {
+      // Add BME280 if present
+      if (selectedCaseData.components.some(c => c.name.includes('BME280') || c.name.includes('temp/humidity'))) {
         const sensor = getModuleById(MODULE_CATALOG, 'sensor_bme280');
         if (sensor) {
           workflow.nodes.push({
             id: createId('node'),
             moduleId: sensor.id,
-            label: 'BME280传感器',
+            label: 'BME280 Sensor',
           });
         }
       }
@@ -315,7 +315,7 @@ const CircuitCasesPage: React.FC = () => {
 
     const project = upsertProjectFromCreateInput({
       name: `${selectedCaseData.name} (Copy)`,
-      description: `基于案例 "${selectedCaseData.name}" 创建的项目。\n${selectedCaseData.description}`,
+      description: `Based on case "${selectedCaseData.name}" - created project。\n${selectedCaseData.description}`,
       requirementsText: selectedCaseData.description,
       coverImageDataUrl: selectedCaseData.image,
       workflow: workflow,
@@ -327,7 +327,7 @@ const CircuitCasesPage: React.FC = () => {
     navigate(`/project-create?projectId=${project.id}`);
   };
 
-  // 分页处理
+  // Pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -337,7 +337,7 @@ const CircuitCasesPage: React.FC = () => {
     setCurrentPage(1);
   };
 
-  // 渲染案例卡片
+  // Render case card
   const renderCaseCard = (caseData: CaseData) => (
     <div
       key={caseData.id}
@@ -369,11 +369,11 @@ const CircuitCasesPage: React.FC = () => {
     <AppShell pageTitle={t('circuit_cases.page_title')} breadcrumb={[t('circuit_cases.breadcrumb_home'), t('circuit_cases.breadcrumb_knowledge'), t('circuit_cases.breadcrumb_cases')]}>
       <>
 
-        {/* 工具栏区域 */}
+        {/* Toolbar */}
         <section className="mb-6">
           <div className="bg-white rounded-2xl shadow-card p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-              {/* 搜索框 */}
+              {/* Search */}
               <div className="flex-1 max-w-md">
                 <div className="relative">
                   <input
@@ -388,9 +388,9 @@ const CircuitCasesPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* 筛选条件 */}
+              {/* Filters */}
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                {/* 应用领域筛选 */}
+                {/* Domain filter */}
                 <div className="w-40">
                   <Select
                     value={applicationFilter}
@@ -408,7 +408,7 @@ const CircuitCasesPage: React.FC = () => {
                   />
                 </div>
 
-                {/* 复杂度筛选 */}
+                {/* Complexity filter */}
                 <div className="w-40">
                   <Select
                     value={complexityFilter}
@@ -423,7 +423,7 @@ const CircuitCasesPage: React.FC = () => {
                   />
                 </div>
 
-                {/* 搜索按钮 */}
+                {/* Search btn */}
                 <button
                   onClick={performSearch}
                   disabled={isSearching}
@@ -437,10 +437,10 @@ const CircuitCasesPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 案例列表区域 */}
+        {/* Case list */}
         <section className="mb-8">
           <div className="bg-white rounded-2xl shadow-card">
-            {/* 案例统计 */}
+            {/* Stats */}
             <div className="p-6 border-b border-border-primary">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-text-primary">{t('circuit_cases.cases_title')}</h3>
@@ -450,22 +450,22 @@ const CircuitCasesPage: React.FC = () => {
               </div>
             </div>
             
-            {/* 案例卡片网格 */}
+            {/* Card grid */}
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {Object.values(caseDatabase).map(renderCaseCard)}
               </div>
             </div>
             
-            {/* 分页区域 */}
+            {/* Pagination */}
             <div className="p-6 border-t border-border-primary">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                {/* 显示信息 */}
+                {/* Info */}
                 <div className="text-sm text-text-secondary">
                   {t('circuit_cases.pagination_showing', { start: '1', end: '8', total: '12,345' })}
                 </div>
                 
-                {/* 分页控件 */}
+                {/* Pagination controls */}
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
@@ -511,7 +511,7 @@ const CircuitCasesPage: React.FC = () => {
                   </button>
                 </div>
                 
-                {/* 每页条数选择 */}
+                {/* Page size */}
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-text-secondary">{t('circuit_cases.pagination_per_page')}</span>
                   <div className="w-20">
@@ -533,7 +533,7 @@ const CircuitCasesPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 案例详情模态弹窗 */}
+        {/* Case detail modal */}
         {isModalVisible && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={handleCloseModal}>
             <div className="flex items-center justify-center min-h-screen p-4">
@@ -541,7 +541,7 @@ const CircuitCasesPage: React.FC = () => {
                 className="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* 模态弹窗头部 */}
+                {/* Modal header */}
                 <div className="flex items-center justify-between p-6 border-b border-border-primary">
                   <h3 className="text-xl font-semibold text-text-primary">{t('circuit_cases.modal_title')}</h3>
                   <button onClick={handleCloseModal} className="text-text-secondary hover:text-text-primary transition-colors">
@@ -549,7 +549,7 @@ const CircuitCasesPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* 模态弹窗内容 */}
+                {/* Modal content */}
                 <div className="p-6">
                   {selectedCaseData ? (
                     <div className="space-y-6">
@@ -616,7 +616,7 @@ const CircuitCasesPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* 模态弹窗底部 */}
+                {/* Modal footer */}
                 <div className="flex items-center justify-end space-x-3 p-6 border-t border-border-primary">
                   <button
                     onClick={handleCloseModal}

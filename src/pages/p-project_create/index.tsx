@@ -59,7 +59,7 @@ const ProjectCreatePage: React.FC = () => {
     type: 'default'
   });
 
-  const [smartPrompt, setSmartPrompt] = useState('');
+  const [smartPrompt, setSmartPrompt] = useState('A portable air quality monitor with PM2.5 sensor, temperature/humidity, OLED display, WiFi connectivity, and USB-C charging');
   const [isSmartGenerating, setIsSmartGenerating] = useState(false);
 
   const showAlert = (message: string, type: 'default' | 'destructive' | 'success' | 'warning' | 'info' = 'default', title: string = '') => {

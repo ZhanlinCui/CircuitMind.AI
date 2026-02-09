@@ -60,21 +60,42 @@ const Dashboard: React.FC = () => {
 
   return (
     <AppShell pageTitle='app.dashboard' breadcrumb={['app.dashboard']}>
-      <div className="mb-6 md:mb-8">
+      {/* AI Status Banner */}
+      <div className="mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-5 text-white shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-1 md:mb-2">{t('dashboard.welcome')}</h2>
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <i className="fas fa-robot text-2xl"></i>
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <h3 className="font-bold text-lg">Gemini 3 Agent</h3>
+                <span className={`w-2 h-2 rounded-full ${isAiConfigured ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`}></span>
+                <span className="text-sm text-white/80">{isAiConfigured ? 'Connected' : 'Not configured'}</span>
+              </div>
+              <p className="text-sm text-indigo-100 mt-0.5">4-step agentic pipeline: Perceive → Generate → Validate → Iterate</p>
+            </div>
           </div>
-          <div className="flex items-center space-x-3 w-full md:w-auto">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => navigate('/user-profile')}
+              className="px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium hover:bg-white/20 transition-colors"
+            >
+              <i className="fas fa-cog mr-2"></i>AI Settings
+            </button>
             <button
               onClick={handleCreateProjectClick}
-              className="w-full md:w-auto bg-gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:shadow-glow transition-all duration-300 flex items-center justify-center"
+              className="px-5 py-2.5 bg-white text-indigo-700 rounded-lg font-semibold text-sm hover:bg-indigo-50 transition-colors shadow-md"
             >
-              <i className="fas fa-plus mr-2"></i>
-              {t('dashboard.create_project')}
+              <i className="fas fa-plus mr-2"></i>New Project
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Welcome */}
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-1">{t('dashboard.welcome')}</h2>
       </div>
 
       <section className="mb-6 md:mb-8">
@@ -274,80 +295,25 @@ const Dashboard: React.FC = () => {
         </div>
       </section>
 
+      {/* Agentic Pipeline Explainer */}
       <section className="mb-8">
-        <h3 className="text-xl font-semibold text-text-primary mb-4">{t('dashboard.system.title')}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl p-6 shadow-card">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold text-text-primary">{t('dashboard.system.ai_model')}</h4>
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 bg-success rounded-full ${styles.statusIndicator}`}></div>
-                <span className="text-success font-medium text-sm">{t('dashboard.system.normal')}</span>
+        <h3 className="text-xl font-semibold text-text-primary mb-4">How CircuitMind Works</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[
+            { step: '01', title: 'Perceive', desc: 'Gemini 3 analyzes your requirements and extracts key parameters', icon: 'fa-search', color: 'bg-blue-500' },
+            { step: '02', title: 'Generate', desc: '3 differentiated circuit solutions with JSON Schema output', icon: 'fa-magic', color: 'bg-indigo-500' },
+            { step: '03', title: 'Validate', desc: 'AI self-reviews for voltage, bus, and component issues', icon: 'fa-shield-alt', color: 'bg-purple-500' },
+            { step: '04', title: 'Iterate', desc: 'Critical issues auto-fixed without human intervention', icon: 'fa-sync-alt', color: 'bg-pink-500' },
+          ].map((s) => (
+            <div key={s.step} className="bg-white rounded-2xl p-5 shadow-card border border-slate-100 hover:shadow-md transition-shadow">
+              <div className={`w-10 h-10 ${s.color} rounded-xl flex items-center justify-center mb-3`}>
+                <i className={`fas ${s.icon} text-white`}></i>
               </div>
+              <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Step {s.step}</div>
+              <h4 className="font-bold text-text-primary mb-1">{s.title}</h4>
+              <p className="text-xs text-text-secondary leading-relaxed">{s.desc}</p>
             </div>
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Provider</span>
-                <span className="text-text-primary font-medium">{aiConfig?.provider === 'gemini' ? 'Google Gemini' : aiConfig?.provider ?? 'Not set'}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Model</span>
-                <span className="text-text-primary font-medium">{aiConfig?.model ?? 'Not configured'}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">Status</span>
-                <span className={`font-medium ${isAiConfigured ? 'text-success' : 'text-warning'}`}>{isAiConfigured ? 'Ready' : 'Needs API Key'}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-card">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold text-text-primary">{t('dashboard.system.knowledge_base')}</h4>
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 bg-success rounded-full ${styles.statusIndicator}`}></div>
-                <span className="text-success font-medium text-sm">{t('dashboard.system.normal')}</span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.components_count')}</span>
-                <span className="text-text-primary font-medium">1,245,678</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.case_count')}</span>
-                <span className="text-text-primary font-medium">12,345</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.last_update')}</span>
-                <span className="text-text-primary font-medium">2024-01-15</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-card">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold text-text-primary">{t('dashboard.system.performance')}</h4>
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 bg-success rounded-full ${styles.statusIndicator}`}></div>
-                <span className="text-success font-medium text-sm">{t('dashboard.system.normal')}</span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.cpu_usage')}</span>
-                <span className="text-text-primary font-medium">45%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.memory_usage')}</span>
-                <span className="text-text-primary font-medium">68%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-text-secondary">{t('dashboard.system.online_users')}</span>
-                <span className="text-text-primary font-medium">234</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
     </AppShell>

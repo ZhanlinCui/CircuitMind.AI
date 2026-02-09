@@ -271,10 +271,10 @@ function toStringArray(value: unknown): string[] {
 
 function normalizeRiskLevel(value: unknown): SolutionRiskLevel {
   const raw = toString(value)?.toLowerCase() ?? '';
-  if (raw.includes('low') || raw.includes('低')) {
+  if (raw.includes('low') || raw.includes('low')) {
     return 'low';
   }
-  if (raw.includes('high') || raw.includes('高')) {
+  if (raw.includes('high') || raw.includes('high')) {
     return 'high';
   }
   return 'medium';
@@ -286,7 +286,7 @@ function normalizeSolutionModule(
   const record = toRecord(value) ?? {};
   return {
     id: toString(record.id) ?? createId('mod'),
-    name: toString(record.name) ?? '模块',
+    name: toString(record.name) ?? 'Module',
     summary: toString(record.summary) ?? '',
     inputs: toStringArray(record.inputs ?? record.input),
     outputs: toStringArray(record.outputs ?? record.output),
@@ -329,7 +329,7 @@ function normalizeSolutionAssets(value: unknown): ProjectSolution['assets'] {
   };
 }
 
-// ========== 新增：归一化 L0/L1 架构图和研发工作流 ==========
+// normalize L0/L1 architecture andR&D Workflow ==========
 
 function normalizeGraphPort(value: unknown): GraphPort | undefined {
   const record = toRecord(value);
@@ -483,16 +483,16 @@ function normalizeSolution(
   const milestones = Array.isArray(record.milestones ?? record.milestone)
     ? (record.milestones ?? record.milestone)
     : [];
-  // 处理新增字段
+  // Process additional fields
   const openQuestions = Array.isArray(record.openQuestions) ? record.openQuestions : [];
 
   return {
     id: toString(record.id) ?? createId(`sol_${index + 1}`),
-    name: toString(record.name) ?? `方案 ${index + 1}`,
-    positioning: toString(record.positioning ?? record.position) ?? '均衡',
-    costRange: toString(record.costRange ?? record.cost) ?? '待评估',
+    name: toString(record.name) ?? `Solution ${index + 1}`,
+    positioning: toString(record.positioning ?? record.position) ?? 'Balanced',
+    costRange: toString(record.costRange ?? record.cost) ?? 'TBD',
     durationRange:
-      toString(record.durationRange ?? record.duration) ?? '待评估',
+      toString(record.durationRange ?? record.duration) ?? 'TBD',
     riskLevel: normalizeRiskLevel(
       record.riskLevel ?? record.risk_level ?? record.risk,
     ),
@@ -508,97 +508,97 @@ function normalizeSolution(
     assets: normalizeSolutionAssets(record.assets ?? record.asset ?? record),
     generatedAtMs: now,
 
-    // ========== 新增字段 ==========
+    // ========== Additional fields ==========
     architectureL0: normalizeGraphDTO(record.architectureL0),
     architectureL1: normalizeGraphDTO(record.architectureL1),
     interfaceTable: Array.isArray(record.interfaceTable)
       ? record.interfaceTable.map(normalizeGraphEdge)
       : undefined,
     rdWorkflow: normalizeWorkflowDTO(record.rdWorkflow),
-    openQuestions: openQuestions.map(normalizeOpenQuestion).slice(0, 8), // 最多8条
+    openQuestions: openQuestions.map(normalizeOpenQuestion).slice(0, 8), // max 8
   };
 }
 
 function buildSolutionPrompt(project: Project) {
   const system = [
-    '你是资深硬件系统方案架构师。',
-    '输出严格合法JSON，无Markdown代码块，无注释，紧凑格式。',
-    '必须输出3个方案，差异明显（主控选型/供电/通信/成本/功耗/扩展性）。',
-    '每方案覆盖：供电、主控、传感/执行、通信、接口、存储、调试、保护。',
+    'You are a senior hardware systems architect.',
+    'Output strictly valid JSON, no Markdown code blocks, no comments, compact format.',
+    'Output 3 clearly differentiated solutions (MCU/power/comms/cost/consumption/scalability).',
+    'Each solution covers: power, MCU, sensor/actuator, comms, interface, storage, debug, protection.',
     '',
-    '数量约束：modules=6-8 edges=8-12 milestones=3 highlights<=5 tradeoffs<=4 assumptions<=3',
+    'Quantity constraints: modules=6-8 edges=8-12 milestones=3 highlights<=5 tradeoffs<=4 assumptions<=3',
     '',
-    '【关键】architectureL1必须与modules建立层次映射关系：',
-    '1. 先在modules中定义功能模块(如\'电源模块\'id=\'M_POWER\',\'主控模块\'id=\'M_MCU\')',
-    '2. 在architectureL1.nodes中，具体器件的parentId必须指向所属模块ID',
-    '   示例：{id:\'U1\',label:\'AMS1117\',nodeType:\'submodule\',parentId:\'M_POWER\'}',
-    '3. Group节点(nodeType=\'group\')代表模块边界，id必须与module.id一致',
-    '   示例：{id:\'M_POWER\',label:\'电源模块\',nodeType:\'group\',summary:\'5V转3.3V\'}',
+    '[KEY] architectureL1 must map hierarchically to modules:',
+    '1. Define functional modules in modules (e.g. Power Module id=M_POWER, MCU Module id=M_MCU)',
+    '2. In architectureL1.nodes, each device parentId must point to its parent module ID',
+    '   Example: {id:U1,label:AMS1117,nodeType:submodule,parentId:M_POWER}',
+    '3. Group nodes (nodeType=group) represent module boundaries, id must match module.id',
+    '   Example: {id:M_POWER,label:Power Module,nodeType:group,summary:5V to 3.3V}',
     '',
-    'architectureL1结构(nodes=12-20 edges=15-25)：',
-    '- Group节点(4-6个)：对应modules，无ports字段',
-    '- Submodule节点(8-14个)：具体芯片/器件，必须有parentId和ports',
-    '- 每个submodule节点ports=2-6个',
+    'architectureL1 structure (nodes=12-20 edges=15-25):',
+    '- Group nodes (4-6): correspond to modules, no ports field',
+    '- Submodule nodes (8-14): specific chips/devices, must have parentId and ports',
+    '- Each submodule node has 2-6 ports',
     '',
-    '必须包含的Group及其Submodule：',
-    '1. 电源模块(M_POWER)：USB接口、LDO芯片、滤波电容',
-    '2. 主控模块(M_MCU)：MCU芯片、晶振、复位电路',
-    '3. 通信模块(M_COMM)：UART接口、USB_DM/DP',
-    '4. 调试模块(M_DEBUG)：SWD接口、调试连接器',
+    'Required Groups and their Submodules:',
+    '1. Power Module (M_POWER): USB connector, LDO chip, filter caps',
+    '2. MCU Module (M_MCU): MCU chip, crystal, reset circuit',
+    '3. Comms Module (M_COMM): UART interface, USB_DM/DP',
+    '4. Debug Module (M_DEBUG): SWD interface, debug connector',
     '',
-    '端口方向规则：',
-    '  in=信号进入(VDD/RX) out=信号输出(VOUT/TX) bidirectional=双向(SDA/SWDIO)',
+    'Port direction rules:',
+    '  in=signal input(VDD/RX) out=signal output(VOUT/TX) bidirectional=both(SDA/SWDIO)',
     '',
-    '【rdWorkflow 研发工作流生成规则】',
-    '数量约束：lanes=3-5 nodes=6-12 edges=6-14 gates=1-3',
+    '【rdWorkflow R&D Workflowgeneration rules】',
+    'Constraints: lanes=3-5 nodes=6-12 edges=6-14 gates=1-3',
     '',
-    '必须包含的泳道(3-5个)：',
-    '1. 硬件设计(L_HW)：需求分析、原理图、PCB、器件选型',
-    '2. 软件开发(L_SW)：BSP/驱动、固件、应用程序',
-    '3. 测试验证(L_TEST)：功能测试、可靠性测试、认证',
-    '4. 项目管理(L_PM)：可选，评审、门禁管理',
-    '5. 供应链(L_SCM)：可选，器件采购、生产准备',
+    'Required swim lanes (3-5):',
+    '1. Hardware Design (L_HW): requirements, schematic, PCB, component selection',
+    '2. Software Dev (L_SW): BSP/drivers, firmware, application',
+    '3. Test & Verify (L_TEST): functional test, reliability test, certification',
+    '4. Project Mgmt (L_PM): optional, reviews, gate management',
+    '5. Supply Chain (L_SCM): optional, procurement, production prep',
     '',
-    '节点设计要求：',
-    '- 必须覆盖完整周期：需求→设计→开发→测试→验收',
-    '- 每个节点必须有具体交付物(outputs)和明确验收标准(acceptance)',
-    '- 必须指定ownerRole(如\'硬件工程师\'、\'软件工程师\')和durationEstimate(如\'3天\'、\'1周\')',
-    '- 节点命名要具体：避免\'设计\'，使用\'原理图设计\'、\'PCB Layout\'、\'驱动开发\'',
+    'Node design requirements:',
+    '- Must cover full cycle: requirements->design->develop->test->acceptance',
+    '- Each node must have specific deliverables (outputs) and acceptance criteria',
+    '- Must specify ownerRole and durationEstimate',
+    '- Node names must be specific: use Schematic Design, PCB Layout, Driver Dev',
     '',
-    '边(依赖关系)设计：',
-    '- relation可选值：depends_on(依赖), produces(产出), verifies(验证)',
-    '- 必须有跨泳道协作边，体现硬件-软件-测试的配合',
-    '- 示例：原理图→PCB(produces)、PCB+固件→功能测试(depends_on)',
+    'Edge (dependency) design:',
+    '- relation values: depends_on, produces, verifies',
+    '- Must have cross-lane collaboration edges (HW-SW-Test coordination)',
+    '- Example: Schematic->PCB(produces), PCB+Firmware->FuncTest(depends_on)',
     '',
-    '门禁(Gates)设计：',
-    '- 至少1个关键评审门禁(如EVT、DVT、PVT)',
-    '- 每个门禁必须包含criteria(验收标准)和evidence(证据材料)',
-    '- 示例：EVT门禁→criteria=[\'原理图评审通过\',\'关键器件确认\']',
+    'Gate design:',
+    '- At least 1 key review gate (EVT, DVT, PVT)',
+    '- Each gate must include criteria and evidence',
+    '- Example: EVT gate->criteria=[schematic review passed, key components confirmed]',
     '',
-    'openQuestions<=8 wireframes<=6 flow/ia各<=200字',
+    'openQuestions<=8 wireframes<=6 flow/ia<=200 chars each',
   ].join('');
 
   const user = [
-    `需求：${project.requirementsText || '无'}`,
-    `补充：${project.description || '无'}`,
+    `Requirements: ${project.requirementsText || 'None'}`,
+    `Additional: ${project.description || 'None'}`,
     '',
-    '输出JSON结构(紧凑，无注释，无```json)：',
+    'Output JSON structure (compact, no comments, no ```json):',
     '{',
-    '  "assumptions":["假设1","假设2"],',
+    '  "assumptions":["assumption1","assumption2"],',
     '  "solutions":[{',
-    '    "id":"S1","name":"方案名","positioning":"高性价比|均衡|高扩展",',
-    '    "costRange":"单板成本X-Y元","durationRange":"N-M周","riskLevel":"low|medium|high",',
-    '    "highlights":["亮点1"],"tradeoffs":["权衡1"],"assumptions":["方案假设"],',
+    '    "id":"S1","name":"Solution Name","positioning":"cost-effective|balanced|scalable",',
+    '    "costRange":"$X-Y per board","durationRange":"N-M weeks","riskLevel":"low|medium|high",',
+    '    "highlights":["Highlights1"],"tradeoffs":["tradeoff1"],"assumptions":["assumption"],',
     '',
     '    "modules":[',
-    '      {"id":"M_POWER","name":"电源模块","summary":"USB 5V转3.3V","inputs":["5V"],"outputs":["3.3V"],"dependencies":[],"complexity":"low","risks":[]},',
-    '      {"id":"M_MCU","name":"主控模块","summary":"STM32主控","inputs":["3.3V"],"outputs":["GPIO"],"dependencies":["M_POWER"],"complexity":"medium","risks":[]}',
+    '      {"id":"M_POWER","name":"Power Module","summary":"USB 5V to 3.3V","inputs":["5V"],"outputs":["3.3V"],"dependencies":[],"complexity":"low","risks":[]},',
+    '      {"id":"M_MCU","name":"MCU Module","summary":"STM32 MCU","inputs":["3.3V"],"outputs":["GPIO"],"dependencies":["M_POWER"],"complexity":"medium","risks":[]}',
     '    ],',
     '    "edges":[{"source":"M_POWER","target":"M_MCU","kind":"power","contract":"3.3V/500mA","criticality":"high"}],',
     '',
     '    "architectureL1":{',
     '      "nodes":[',
-    '        {"id":"M_POWER","label":"电源模块","nodeType":"group","summary":"5V->3.3V供电"},',
+    '        {"id":"M_POWER","label":"Power Module","nodeType":"group","summary":"5V to 3.3V power"},',
     '        {"id":"U_USB","label":"USB_C","nodeType":"submodule","parentId":"M_POWER","ports":[',
     '          {"id":"P1","name":"VBUS","kind":"power","direction":"out","voltage":"5V"},',
     '          {"id":"P2","name":"D+","kind":"io","direction":"bidirectional"},',
@@ -608,7 +608,7 @@ function buildSolutionPrompt(project: Project) {
     '          {"id":"P4","name":"VIN","kind":"power","direction":"in","voltage":"5V"},',
     '          {"id":"P5","name":"VOUT","kind":"power","direction":"out","voltage":"3.3V"}',
     '        ]},',
-    '        {"id":"M_MCU","label":"主控模块","nodeType":"group","summary":"STM32主控"},',
+    '        {"id":"M_MCU","label":"MCU Module","nodeType":"group","summary":"STM32 MCU"},',
     '        {"id":"U_MCU","label":"STM32F072CBT6","nodeType":"submodule","parentId":"M_MCU","ports":[',
     '          {"id":"P6","name":"VDD","kind":"power","direction":"in","voltage":"3.3V"},',
     '          {"id":"P7","name":"USB_DM","kind":"io","direction":"bidirectional"},',
@@ -624,23 +624,23 @@ function buildSolutionPrompt(project: Project) {
     '      ]',
     '    },',
     '',
-    '    "milestones":[{"name":"EVT","deliverables":["原理图"],"timeframe":"第2周"}],',
-    '    "assets":{"flow":"USB->LDO->MCU","ia":"单板布局","wireframes":[]},',
+    '    "milestones":[{"name":"EVT","deliverables":["schematic"],"timeframe":"week 2"}],',
+    '    "assets":{"flow":"USB->LDO->MCU","ia":"board layout","wireframes":[]},',
     '',
     '    "rdWorkflow":{',
     '      "lanes":[',
-    '        {"id":"L_HW","name":"硬件设计"},',
-    '        {"id":"L_SW","name":"软件开发"},',
-    '        {"id":"L_TEST","name":"测试验证"}',
+    '        {"id":"L_HW","name":"Hardware Design"},',
+    '        {"id":"L_SW","name":"Software Dev"},',
+    '        {"id":"L_TEST","name":"Test & Verify"}',
     '      ],',
     '      "nodes":[',
-    '        {"id":"N1","laneId":"L_HW","name":"需求分析","inputs":[],"outputs":["需求规格书","器件选型表"],"acceptance":["需求评审通过","器件可获得性确认"],"ownerRole":"硬件负责人","durationEstimate":"2-3天"},',
-    '        {"id":"N2","laneId":"L_HW","name":"原理图设计","inputs":["需求规格书","器件选型表"],"outputs":["原理图","BOM清单"],"acceptance":["原理图评审通过","关键信号仿真验证"],"ownerRole":"硬件工程师","durationEstimate":"5-7天"},',
-    '        {"id":"N3","laneId":"L_HW","name":"PCB设计","inputs":["原理图"],"outputs":["PCB文件","Gerber文件"],"acceptance":["DRC/DFM检查通过","叠层设计评审"],"ownerRole":"Layout工程师","durationEstimate":"5-7天"},',
-    '        {"id":"N4","laneId":"L_SW","name":"BSP开发","inputs":["原理图"],"outputs":["驱动代码","HAL层"],"acceptance":["代码编译通过","单元测试覆盖率>80%"],"ownerRole":"嵌入式工程师","durationEstimate":"1-2周"},',
-    '        {"id":"N5","laneId":"L_SW","name":"应用程序开发","inputs":["需求规格书","驱动代码"],"outputs":["固件程序"],"acceptance":["功能模块自测通过"],"ownerRole":"软件工程师","durationEstimate":"1-2周"},',
-    '        {"id":"N6","laneId":"L_TEST","name":"功能测试","inputs":["PCB样板","固件程序"],"outputs":["测试报告"],"acceptance":["测试用例100%执行","关键功能验证通过"],"ownerRole":"测试工程师","durationEstimate":"3-5天"},',
-    '        {"id":"N7","laneId":"L_TEST","name":"可靠性测试","inputs":["PCB样板","固件程序"],"outputs":["可靠性报告"],"acceptance":["高低温测试通过","EMC预测试通过"],"ownerRole":"测试工程师","durationEstimate":"1周"}',
+    '        {"id":"N1","laneId":"L_HW","name":"Requirements Analysis","inputs":[],"outputs":["req spec","component list"],"acceptance":["req review passed","components available"],"ownerRole":"HW Lead","durationEstimate":"2-3 days"},',
+    '        {"id":"N2","laneId":"L_HW","name":"Schematic Design","inputs":["req spec","component list"],"outputs":["schematic","BOM"],"acceptance":["schematic review passed","signal simulation verified"],"ownerRole":"HW Engineer","durationEstimate":"5-7 days"},',
+    '        {"id":"N3","laneId":"L_HW","name":"PCB Layout","inputs":["schematic"],"outputs":["PCB files","Gerber files"],"acceptance":["DRC/DFM passed","stackup review"],"ownerRole":"Layout Engineer","durationEstimate":"5-7 days"},',
+    '        {"id":"N4","laneId":"L_SW","name":"BSP Development","inputs":["schematic"],"outputs":["driver code","HAL layer"],"acceptance":["compiles","unit test >80%"],"ownerRole":"Embedded Engineer","durationEstimate":"1-2 weeks"},',
+    '        {"id":"N5","laneId":"L_SW","name":"App Development","inputs":["req spec","driver code"],"outputs":["firmware"],"acceptance":["module self-test passed"],"ownerRole":"SW Engineer","durationEstimate":"1-2 weeks"},',
+    '        {"id":"N6","laneId":"L_TEST","name":"Functional Test","inputs":["PCB sample","firmware"],"outputs":["test report"],"acceptance":["100% test cases executed","key functions verified"],"ownerRole":"Test Engineer","durationEstimate":"3-5 days"},',
+    '        {"id":"N7","laneId":"L_TEST","name":"Reliability Test","inputs":["PCB sample","firmware"],"outputs":["reliability report"],"acceptance":["temp cycling passed","EMC pre-test passed"],"ownerRole":"Test Engineer","durationEstimate":"1 week"}',
     '      ],',
     '      "edges":[',
     '        {"fromNodeId":"N1","toNodeId":"N2","relation":"produces"},',
@@ -653,8 +653,8 @@ function buildSolutionPrompt(project: Project) {
     '        {"fromNodeId":"N6","toNodeId":"N7","relation":"verifies"}',
     '      ],',
     '      "gates":[',
-    '        {"id":"G1","name":"EVT评审","criteria":["原理图评审通过","关键器件选型确认","成本核算完成"],"evidence":["评审会议记录","器件认证清单","成本分析报告"]},',
-    '        {"id":"G2","name":"DVT评审","criteria":["功能测试通过","可靠性测试通过","软件代码冻结"],"evidence":["功能测试报告","可靠性测试报告","代码提交记录"]}',
+    '        {"id":"G1","name":"EVT Review","criteria":["schematic reviewed","key components confirmed","cost analysis done"],"evidence":["review minutes","component cert list","cost report"]},',
+    '        {"id":"G2","name":"DVT Review","criteria":["functional test passed","reliability test passed","code frozen"],"evidence":["func test report","reliability report","code commit log"]}',
     '      ]',
     '    },',
     '',
@@ -662,21 +662,21 @@ function buildSolutionPrompt(project: Project) {
     '  }]',
     '}',
     '',
-    '【关键】每个module必须在architectureL1中有对应的group节点(id相同)，该group下包含具体器件(parentId指向group)',
-    'type可选值: power bus io rf net debug',
+    '[KEY] Each module must have a corresponding group node in architectureL1 (same id), with devices having parentId pointing to group',
+    'typeoptions: power bus io rf net debug',
   ].join('\n');
 
   return { system, user };
 }
 
 /**
- * 将AI生成的方案模块转换为WorkflowModuleDefinition格式
+ * Convert AI-generated solution modules to WorkflowModuleDefinition format
  */
 function convertSolutionModulesToCatalog(
   solution: ProjectSolution,
 ): WorkflowModuleDefinition[] {
   return (solution.modules ?? []).map((module) => {
-    // 为每个输入创建 IO 端口定义
+    // Create IO port definitions for each input
     const inputPorts: WorkflowPortDefinition[] = (module.inputs ?? []).map(
       (input, index) => ({
         id: `input_${index}`,
@@ -687,7 +687,7 @@ function convertSolutionModulesToCatalog(
       }),
     );
 
-    // 为每个输出创建 IO 端口定义
+    // Create IO port definitions for each output
     const outputPorts: WorkflowPortDefinition[] = (module.outputs ?? []).map(
       (output, index) => ({
         id: `output_${index}`,
@@ -708,27 +708,27 @@ function convertSolutionModulesToCatalog(
 }
 
 /**
- * 将AI生成的方案模块转换为Workflow格式，用于可视化渲染
+ * Convert AI-generated solution to Workflow format for visualization
  */
 function convertSolutionToWorkflow(
   solution: ProjectSolution,
   moduleCatalog: WorkflowModuleDefinition[],
 ): Workflow {
-  // 1. 将 SolutionModule 转换为 WorkflowNode
+  // 1. Convert SolutionModule to WorkflowNode
   const nodes: WorkflowNode[] = (solution.modules ?? []).map((module) => ({
     id: module.id,
     moduleId: module.id,
     label: module.name,
   }));
 
-  // 2. 将 SolutionEdge 转换为 WorkflowConnection
+  // 2. Convert SolutionEdge to WorkflowConnection
   const connections: WorkflowConnection[] = (solution.edges ?? []).map(
     (edge, index) => {
-      // 找到源模块和目标模块
+      // Find source and target modules
       const sourceModule = moduleCatalog.find((m) => m.id === edge.source);
       const targetModule = moduleCatalog.find((m) => m.id === edge.target);
 
-      // 使用第一个输出端口和第一个输入端口
+      // Use first output port and first input port
       const sourcePort = sourceModule?.ports.find((p) => p.direction === 'out');
       const targetPort = targetModule?.ports.find((p) => p.direction === 'in');
 
@@ -811,19 +811,19 @@ function WorkflowSummary({ project }: { project: Project }) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-2xl shadow-card p-6">
-          <div className="text-sm text-text-secondary">模块数</div>
+          <div className="text-sm text-text-secondary">Modules</div>
           <div className="text-3xl font-bold text-text-primary mt-1">
             {project.workflow.nodes.length}
           </div>
         </div>
         <div className="bg-white rounded-2xl shadow-card p-6">
-          <div className="text-sm text-text-secondary">连接数</div>
+          <div className="text-sm text-text-secondary">Connections</div>
           <div className="text-3xl font-bold text-text-primary mt-1">
             {project.workflow.connections.length}
           </div>
         </div>
         <div className="bg-white rounded-2xl shadow-card p-6">
-          <div className="text-sm text-text-secondary">校验问题</div>
+          <div className="text-sm text-text-secondary">Validation Issues</div>
           <div className="text-3xl font-bold text-text-primary mt-1">
             {issues.length}
           </div>
@@ -832,18 +832,18 @@ function WorkflowSummary({ project }: { project: Project }) {
 
       <div className="bg-white rounded-2xl shadow-card overflow-hidden h-[600px] border border-border-primary">
         <div className="p-4 border-b border-border-primary bg-gray-50 font-semibold text-text-primary">
-          系统连接图
+          System Topology
         </div>
         <WorkflowGraph workflow={project.workflow} />
       </div>
 
       <div className="bg-white rounded-2xl shadow-card overflow-hidden">
         <div className="p-6 border-b border-border-primary flex items-center justify-between">
-          <div className="font-semibold text-text-primary">模块列表</div>
+          <div className="font-semibold text-text-primary">Module List</div>
         </div>
         {project.workflow.nodes.length === 0 ? (
           <div className="p-6 text-text-secondary text-sm">
-            还没有工作流模块，可以去“编辑项目”开始拼接。
+            No workflow modules，可以去“Edit project”start building。
           </div>
         ) : (
           <ul className="divide-y divide-border-primary">
@@ -876,10 +876,10 @@ function WorkflowSummary({ project }: { project: Project }) {
 
       <div className="bg-white rounded-2xl shadow-card overflow-hidden">
         <div className="p-6 border-b border-border-primary flex items-center justify-between">
-          <div className="font-semibold text-text-primary">校验结果</div>
+          <div className="font-semibold text-text-primary">Validation Results</div>
         </div>
         {issues.length === 0 ? (
-          <div className="p-6 text-sm text-success">暂无问题</div>
+          <div className="p-6 text-sm text-success">No issues found</div>
         ) : (
           <ul className="divide-y divide-border-primary">
             {issues.map((issue) => (
@@ -949,7 +949,7 @@ const ProjectDetailPage: React.FC = () => {
     if (!project) {
       return;
     }
-    if (!confirm('确定要删除这个项目吗？此操作不可撤销。')) {
+    if (!confirm('Delete this project? This cannot be undone.')) {
       return;
     }
     deleteProject(project.id);
@@ -1063,8 +1063,8 @@ const ProjectDetailPage: React.FC = () => {
           ? toRecord(data)
           : parseJsonWithRepair(jsonText);
       } catch (_error) {
-        console.error('❌ JSON 解析失败:', _error);
-        throw new Error('解析返回内容失败，请检查模型输出格式');
+        console.error('❌ JSON parse failed:', _error);
+        throw new Error('Failed to parse AI response');
       }
       const parsedObject = Array.isArray(parsed)
         ? undefined
@@ -1079,7 +1079,7 @@ const ProjectDetailPage: React.FC = () => {
           ? (parsedObject.assumptions as string[])
           : [];
       if (parsedSolutions.length === 0) {
-        throw new Error('未解析到方案结果');
+        throw new Error('No solutions found in response');
       }
 
       const now = Date.now();
@@ -1095,9 +1095,9 @@ const ProjectDetailPage: React.FC = () => {
           );
           nextSolutions.push(normalized);
         } catch (err) {
-          console.error(`❌ 第 ${index + 1} 个方案标准化失败:`, err);
-          console.error('❌ 错误堆栈:', err instanceof Error ? err.stack : 'No stack trace');
-          console.error('❌ 方案数据:', parsedSolutions[index]);
+          console.error(`❌ Solution ${index + 1} solution normalization failed:`, err);
+          console.error('❌ Stack trace:', err instanceof Error ? err.stack : 'No stack trace');
+          console.error('❌ Solution data:', parsedSolutions[index]);
           throw err;
         }
       }
@@ -1108,8 +1108,8 @@ const ProjectDetailPage: React.FC = () => {
       setSelectedSolutionId(nextSolutions[0]?.id ?? null);
       reloadProject();
     } catch (error) {
-      console.error('方案生成失败:', error);
-      setGenerateError(error instanceof Error ? error.message : '生成失败');
+      console.error('Solution generation failed:', error);
+      setGenerateError(error instanceof Error ? error.message : 'Generation failed');
       setProjectStatus(project.id, 'draft');
       reloadProject();
     } finally {
@@ -1166,8 +1166,8 @@ const ProjectDetailPage: React.FC = () => {
 
   return (
     <AppShell
-      pageTitle="项目详情"
-      breadcrumb={['工作台', '项目管理', '项目详情']}
+      pageTitle="Project Detail"
+      breadcrumb={['Dashboard', 'Projects', 'Project Detail']}
     >
       {!project ? (
         <ProjectNotFound onBack={() => navigate('/project-list')} />
@@ -1190,7 +1190,7 @@ const ProjectDetailPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="mt-4 text-sm text-text-secondary">
-                  创建：{formatDateTime(project.createdAtMs)} · 更新：
+                  Created: {formatDateTime(project.createdAtMs)} · Updated: 
                   {formatDateTime(project.updatedAtMs)}
                 </div>
               </div>
@@ -1203,28 +1203,28 @@ const ProjectDetailPage: React.FC = () => {
                   }
                   className="px-4 py-2 bg-white border border-border-primary rounded-lg font-medium text-text-primary hover:bg-bg-secondary transition-colors"
                 >
-                  <i className="fas fa-edit mr-2"></i>编辑项目
+                  <i className="fas fa-edit mr-2"></i>Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSetStatus('in_progress')}
                   className="px-4 py-2 bg-warning bg-opacity-10 text-warning border border-warning border-opacity-20 rounded-lg font-medium hover:bg-opacity-20 transition-colors"
                 >
-                  标记进行中
+                  Mark In Progress
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSetStatus('completed')}
                   className="px-4 py-2 bg-success bg-opacity-10 text-success border border-success border-opacity-20 rounded-lg font-medium hover:bg-opacity-20 transition-colors"
                 >
-                  标记已完成
+                  Mark Completed
                 </button>
                 <button
                   type="button"
                   onClick={handleDelete}
                   className="px-4 py-2 bg-white border border-border-primary rounded-lg font-medium text-danger hover:bg-bg-secondary transition-colors"
                 >
-                  <i className="fas fa-trash mr-2"></i>删除
+                  <i className="fas fa-trash mr-2"></i>Delete
                 </button>
               </div>
             </div>
@@ -1235,19 +1235,19 @@ const ProjectDetailPage: React.FC = () => {
               active={activeTab === 'workflow'}
               onClick={() => setActiveTab('workflow')}
             >
-              模块工作流
+              Module Workflow
             </TabButton>
             <TabButton
               active={activeTab === 'requirements'}
               onClick={() => setActiveTab('requirements')}
             >
-              文本需求
+              Requirements
             </TabButton>
             <TabButton
               active={activeTab === 'schemes'}
               onClick={() => setActiveTab('schemes')}
             >
-              方案输出
+              Solutions
             </TabButton>
           </div>
 
@@ -1256,7 +1256,7 @@ const ProjectDetailPage: React.FC = () => {
           {activeTab === 'requirements' && (
             <div className="bg-white rounded-2xl shadow-card p-6">
               <div className="font-semibold text-text-primary mb-3">
-                需求描述
+                Requirements
               </div>
               <pre className="whitespace-pre-wrap text-sm text-text-primary bg-bg-secondary rounded-lg p-4 border border-border-primary">
                 {project.requirementsText || '—'}
@@ -1270,10 +1270,10 @@ const ProjectDetailPage: React.FC = () => {
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div>
                     <div className="font-semibold text-text-primary mb-1">
-                      方案输出
+                      Solutions
                     </div>
                     <div className="text-sm text-text-secondary">
-                      使用用户自带算力生成多方案，并保存到本项目
+                      Generate multiple AI solutions and save to this project
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -1283,14 +1283,14 @@ const ProjectDetailPage: React.FC = () => {
                       disabled={isGenerating}
                       className="px-4 py-2 bg-gradient-primary text-white rounded-lg font-medium hover:shadow-glow transition-all duration-300 disabled:opacity-60"
                     >
-                      {isGenerating ? '生成中...' : '生成 3 个方案'}
+                      {isGenerating ? 'Generating...' : 'Generate 3 Solutions'}
                     </button>
                     <button
                       type="button"
                       onClick={() => navigate('/user-profile')}
                       className="px-4 py-2 bg-white border border-border-primary rounded-lg font-medium text-text-primary hover:bg-bg-secondary transition-colors"
                     >
-                      配置算力
+                      AI Settings
                     </button>
                   </div>
                 </div>
@@ -1365,10 +1365,10 @@ const ProjectDetailPage: React.FC = () => {
                         <i className="fas fa-lightbulb"></i>
                       </div>
                       <div className="text-lg font-medium text-text-primary mb-1">
-                        暂无方案
+                        No Solutions Yet
                       </div>
                       <div className="text-sm">
-                        完成配置后即可生成 3 个可对比的方案
+                        Generate 3 comparable circuit solutions with one click
                       </div>
                     </div>
                   );
@@ -1401,19 +1401,19 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="grid grid-cols-3 gap-2 text-xs text-text-secondary">
                             <div>
-                              <div className="text-text-secondary">成本</div>
+                              <div className="text-text-secondary">Cost</div>
                               <div className="text-text-primary font-medium">
                                 {solution.costRange}
                               </div>
                             </div>
                             <div>
-                              <div className="text-text-secondary">周期</div>
+                              <div className="text-text-secondary">Duration</div>
                               <div className="text-text-primary font-medium">
                                 {solution.durationRange}
                               </div>
                             </div>
                             <div>
-                              <div className="text-text-secondary">风险</div>
+                              <div className="text-text-secondary">Risk</div>
                               <div className="text-text-primary font-medium">
                                 {formatRiskLabel(solution.riskLevel)}
                               </div>
@@ -1435,16 +1435,16 @@ const ProjectDetailPage: React.FC = () => {
                             </div>
                           </div>
                           <div className="text-sm text-text-secondary">
-                                生成时间：
+                                Generated: 
                             {formatDateTime(selectedSolution.generatedAtMs)}
                           </div>
                         </div>
 
-                        {/* 方案统计指标 - 包含模块数和连接数 */}
+                        {/* Solution metrics */}
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                           <div className="bg-bg-secondary rounded-lg p-4">
                             <div className="text-xs text-text-secondary mb-1">
-                                  模块数
+                                  Modules
                             </div>
                             <div className="text-2xl font-bold text-text-primary">
                               {selectedSolution.modules?.length ?? 0}
@@ -1452,7 +1452,7 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="bg-bg-secondary rounded-lg p-4">
                             <div className="text-xs text-text-secondary mb-1">
-                                  连接数
+                                  Connections
                             </div>
                             <div className="text-2xl font-bold text-text-primary">
                               {selectedSolution.edges?.length ?? 0}
@@ -1460,7 +1460,7 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="bg-bg-secondary rounded-lg p-4">
                             <div className="text-xs text-text-secondary mb-1">
-                                  成本区间
+                                  Cost区间
                             </div>
                             <div className="text-sm font-semibold text-text-primary">
                               {selectedSolution.costRange}
@@ -1468,7 +1468,7 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="bg-bg-secondary rounded-lg p-4">
                             <div className="text-xs text-text-secondary mb-1">
-                                  周期区间
+                                  Duration区间
                             </div>
                             <div className="text-sm font-semibold text-text-primary">
                               {selectedSolution.durationRange}
@@ -1476,7 +1476,7 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="bg-bg-secondary rounded-lg p-4">
                             <div className="text-xs text-text-secondary mb-1">
-                                  风险等级
+                                  Risk等级
                             </div>
                             <div className="text-sm font-semibold text-text-primary">
                               {formatRiskLabel(selectedSolution.riskLevel)}
@@ -1484,13 +1484,13 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* 系统架构与工作流 - 新增三个 Tab */}
+                        {/* Architecture与工作流 - 新增三个 Tab */}
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                系统架构与研发工作流
+                                Architecture & R&D Workflow
                           </div>
 
-                          {/* Tab 切换 */}
+                          {/* Tab switch */}
                           <div className="border-b border-border-primary">
                             <div className="flex gap-4">
                               <button
@@ -1502,7 +1502,7 @@ const ProjectDetailPage: React.FC = () => {
                                     : 'border-transparent text-text-secondary hover:text-text-primary'
                                 }`}
                               >
-                                    系统架构
+                                    Architecture
                               </button>
                               <button
                                 type="button"
@@ -1513,7 +1513,7 @@ const ProjectDetailPage: React.FC = () => {
                                     : 'border-transparent text-text-secondary hover:text-text-primary'
                                 }`}
                               >
-                                    L1 详细连接
+                                    L1 Detail
                               </button>
                               <button
                                 type="button"
@@ -1524,12 +1524,12 @@ const ProjectDetailPage: React.FC = () => {
                                     : 'border-transparent text-text-secondary hover:text-text-primary'
                                 }`}
                               >
-                                    研发工作流
+                                    R&D Workflow
                               </button>
                             </div>
                           </div>
 
-                          {/* Tab 内容 */}
+                          {/* Tab content */}
                           <div className="border border-border-primary rounded-lg overflow-hidden h-[600px] bg-gray-50">
                             {archViewTab === 'legacy' && (
                               <WorkflowGraph
@@ -1544,8 +1544,8 @@ const ProjectDetailPage: React.FC = () => {
                               <div className="flex items-center justify-center h-full text-text-secondary">
                                 <div className="text-center">
                                   <i className="fas fa-info-circle text-4xl mb-3"></i>
-                                  <div>此方案暂无 L1 详细连接图数据</div>
-                                  <div className="text-xs mt-2">请重新生成方案以获取完整数据</div>
+                                  <div>此方案暂无 L1 Detail图数据</div>
+                                  <div className="text-xs mt-2">Regenerate to get complete data</div>
                                 </div>
                               </div>
                             ) : null}
@@ -1556,19 +1556,19 @@ const ProjectDetailPage: React.FC = () => {
                               <div className="flex items-center justify-center h-full text-text-secondary">
                                 <div className="text-center">
                                   <i className="fas fa-info-circle text-4xl mb-3"></i>
-                                  <div>此方案暂无研发工作流数据</div>
-                                  <div className="text-xs mt-2">请重新生成方案以获取完整数据</div>
+                                  <div>此方案暂无R&D Workflow数据</div>
+                                  <div className="text-xs mt-2">Regenerate to get complete data</div>
                                 </div>
                               </div>
                             ) : null}
                           </div>
 
-                          {/* 开放问题展示 */}
+                          {/* Open questions */}
                           {selectedSolution.openQuestions && selectedSolution.openQuestions.length > 0 && (
                             <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                               <div className="font-semibold text-sm text-yellow-900 mb-2">
                                 <i className="fas fa-question-circle mr-2"></i>
-                                    待确认问题
+                                    Open Questions
                               </div>
                               <div className="space-y-2">
                                 {selectedSolution.openQuestions.map((q) => (
@@ -1593,7 +1593,7 @@ const ProjectDetailPage: React.FC = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                           <div className="space-y-3">
                             <div className="font-semibold text-text-primary">
-                                  亮点
+                                  Highlights
                             </div>
                             <ul className="text-sm text-text-secondary list-disc pl-5 space-y-1">
                               {(selectedSolution.highlights ?? []).map(
@@ -1605,7 +1605,7 @@ const ProjectDetailPage: React.FC = () => {
                           </div>
                           <div className="space-y-3">
                             <div className="font-semibold text-text-primary">
-                                  取舍
+                                  Trade-offs
                             </div>
                             <ul className="text-sm text-text-secondary list-disc pl-5 space-y-1">
                               {(selectedSolution.tradeoffs ?? []).map(
@@ -1619,7 +1619,7 @@ const ProjectDetailPage: React.FC = () => {
 
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                模块清单
+                                Module List
                           </div>
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {(selectedSolution.modules ?? []).map((module) => (
@@ -1635,20 +1635,20 @@ const ProjectDetailPage: React.FC = () => {
                                 </div>
                                 <div className="text-xs text-text-secondary space-y-1">
                                   <div>
-                                        输入：
+                                        In: 
                                     {module.inputs?.join(' / ') || '—'}
                                   </div>
                                   <div>
-                                        输出：
+                                        Out: 
                                     {module.outputs?.join(' / ') || '—'}
                                   </div>
                                   <div>
-                                        依赖：
+                                        Deps: 
                                     {module.dependencies?.join(' / ') ||
                                           '—'}
                                   </div>
                                   <div>
-                                        复杂度：{module.complexity}
+                                        Complexity: {module.complexity}
                                   </div>
                                 </div>
                               </div>
@@ -1658,7 +1658,7 @@ const ProjectDetailPage: React.FC = () => {
 
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                模块连接图
+                                Module Connections
                           </div>
                           <div className="border border-border-primary rounded-lg p-4 bg-bg-secondary text-sm text-text-secondary space-y-2">
                             {(selectedSolution.edges ?? []).length === 0 ? (
@@ -1678,7 +1678,7 @@ const ProjectDetailPage: React.FC = () => {
 
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                里程碑
+                                Milestones
                           </div>
                           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                             {(selectedSolution.milestones ?? []).map(
@@ -1708,12 +1708,12 @@ const ProjectDetailPage: React.FC = () => {
 
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                关键页面与流程
+                                Key Flows & Assets
                           </div>
                           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                             <div className="border border-border-primary rounded-lg p-4">
                               <div className="text-xs text-text-secondary mb-2">
-                                    流程图
+                                    Flow
                               </div>
                               <div className="text-sm text-text-primary whitespace-pre-wrap">
                                 {selectedSolution.assets?.flow || '—'}
@@ -1721,7 +1721,7 @@ const ProjectDetailPage: React.FC = () => {
                             </div>
                             <div className="border border-border-primary rounded-lg p-4">
                               <div className="text-xs text-text-secondary mb-2">
-                                    信息架构
+                                    Info Architecture
                               </div>
                               <div className="text-sm text-text-primary whitespace-pre-wrap">
                                 {selectedSolution.assets?.ia || '—'}
@@ -1729,7 +1729,7 @@ const ProjectDetailPage: React.FC = () => {
                             </div>
                             <div className="border border-border-primary rounded-lg p-4">
                               <div className="text-xs text-text-secondary mb-2">
-                                    线框图清单
+                                    Wireframes
                               </div>
                               <ul className="text-sm text-text-primary list-disc pl-5 space-y-1">
                                 {(
@@ -1744,7 +1744,7 @@ const ProjectDetailPage: React.FC = () => {
 
                         <div className="space-y-3">
                           <div className="font-semibold text-text-primary">
-                                假设清单
+                                Assumptions
                           </div>
                           <ul className="text-sm text-text-secondary list-disc pl-5 space-y-1">
                             {(selectedSolution.assumptions ?? []).map(

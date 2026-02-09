@@ -35,25 +35,25 @@ const ComponentDatabase: React.FC = () => {
   const [searchParams] = useSearchParams();
   const projectIdFromQuery = searchParams.get('projectId') ?? undefined;
 
-  // 模拟元器件数据
+  // Mock component data
   const mockComponents: Component[] = [
     {
       id: 'comp1',
       model: 'STM32F103C8T6',
       type: 'microcontroller',
-      typeName: '主控芯片',
+      typeName: 'MCU',
       manufacturer: 'st',
       manufacturerName: 'STMicroelectronics',
       package: 'lqfp',
       packageName: 'LQFP48',
       price: 15.80,
       specifications: {
-        '核心架构': 'ARM Cortex-M3',
-        '主频': '72 MHz',
+        'Architecture': 'ARM Cortex-M3',
+        'Clock': '72 MHz',
         'Flash': '64 KB',
         'RAM': '20 KB',
-        '工作电压': '2.0V - 3.6V',
-        '温度范围': '-40°C to 85°C'
+        'Voltage': '2.0V - 3.6V',
+        'Temp Range': '-40°C to 85°C'
       },
       datasheet: 'https://www.st.com/resource/en/datasheet/stm32f103c8.pdf'
     },
@@ -61,20 +61,20 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp2',
       model: 'ESP32-WROOM-32',
       type: 'microcontroller',
-      typeName: '主控芯片',
+      typeName: 'MCU',
       manufacturer: 'esp',
       manufacturerName: 'Espressif Systems',
       package: 'smd',
       packageName: 'SMD',
       price: 28.50,
       specifications: {
-        '核心架构': '双核 Tensilica LX6',
-        '主频': '240 MHz',
+        'Architecture': '双核 Tensilica LX6',
+        'Clock': '240 MHz',
         'Flash': '4 MB',
         'RAM': '520 KB',
-        '工作电压': '3.0V - 3.6V',
-        '温度范围': '-40°C to 85°C',
-        '无线': 'Wi-Fi 802.11 b/g/n, Bluetooth 4.2'
+        'Voltage': '3.0V - 3.6V',
+        'Temp Range': '-40°C to 85°C',
+        'Wireless': 'Wi-Fi 802.11 b/g/n, Bluetooth 4.2'
       },
       datasheet: 'https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf'
     },
@@ -82,20 +82,20 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp3',
       model: 'Arduino Uno R3',
       type: 'microcontroller',
-      typeName: '主控芯片',
+      typeName: 'MCU',
       manufacturer: 'arduino',
       manufacturerName: 'Arduino',
       package: 'dip',
       packageName: 'DIP',
       price: 45.00,
       specifications: {
-        '核心芯片': 'ATmega328P',
-        '主频': '16 MHz',
+        'Core Chip': 'ATmega328P',
+        'Clock': '16 MHz',
         'Flash': '32 KB',
         'RAM': '2 KB',
-        '工作电压': '5V',
-        '数字I/O': '14',
-        '模拟输入': '6'
+        'Voltage': '5V',
+        'Digital I/O': '14',
+        'Analog In': '6'
       },
       datasheet: 'https://www.arduino.cc/en/uploads/Main/Arduino_Uno_Rev3-schematic.pdf'
     },
@@ -103,19 +103,19 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp4',
       model: 'LM35DZ',
       type: 'sensor',
-      typeName: '传感器',
+      typeName: 'Sensor',
       manufacturer: 'ti',
       manufacturerName: 'Texas Instruments',
       package: 'to',
       packageName: 'TO-92',
       price: 3.20,
       specifications: {
-        '类型': '温度传感器',
-        '温度范围': '0°C to 100°C',
-        '精度': '±0.5°C',
-        '输出': '线性电压',
-        '灵敏度': '10 mV/°C',
-        '工作电压': '4V - 30V'
+        'Type': 'Temperature Sensor',
+        'Temp Range': '0°C to 100°C',
+        'Accuracy': '±0.5°C',
+        'Output': 'Linear Voltage',
+        'Sensitivity': '10 mV/°C',
+        'Voltage': '4V - 30V'
       },
       datasheet: 'https://www.ti.com/lit/ds/symlink/lm35.pdf'
     },
@@ -123,18 +123,18 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp5',
       model: 'HC-SR04',
       type: 'sensor',
-      typeName: '传感器',
+      typeName: 'Sensor',
       manufacturer: 'nxp',
       manufacturerName: 'NXP Semiconductors',
       package: 'dip',
       packageName: 'DIP',
       price: 8.90,
       specifications: {
-        '类型': '超声波测距传感器',
-        '测距范围': '2cm - 400cm',
-        '精度': '±3mm',
-        '工作电压': '5V',
-        '接口': 'Trig, Echo, VCC, GND'
+        'Type': 'Ultrasonic Range Sensor',
+        'Range': '2cm - 400cm',
+        'Accuracy': '±3mm',
+        'Voltage': '5V',
+        'Interface': 'Trig, Echo, VCC, GND'
       },
       datasheet: 'https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf'
     },
@@ -142,18 +142,18 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp6',
       model: '10KΩ 0.25W',
       type: 'resistor',
-      typeName: '电阻',
+      typeName: 'Resistor',
       manufacturer: 'yageo',
       manufacturerName: 'Yageo',
       package: 'smd',
       packageName: '0805',
       price: 0.12,
       specifications: {
-        '阻值': '10KΩ',
-        '功率': '0.25W',
-        '精度': '±5%',
-        '温度系数': '±100ppm/°C',
-        '工作温度': '-55°C to 155°C'
+        'Resistance': '10KΩ',
+        'Power': '0.25W',
+        'Accuracy': '±5%',
+        'Temp Coeff': '±100ppm/°C',
+        'Operating Temp': '-55°C to 155°C'
       },
       datasheet: 'https://www.yageo.com/upload/media/product/product_category/resistor/rc-series.pdf'
     },
@@ -161,19 +161,19 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp7',
       model: '100nF 50V',
       type: 'capacitor',
-      typeName: '电容',
+      typeName: 'Capacitor',
       manufacturer: 'murata',
       manufacturerName: 'Murata Manufacturing',
       package: 'smd',
       packageName: '0805',
       price: 0.08,
       specifications: {
-        '容量': '100nF',
-        '电压': '50V',
-        '精度': '±10%',
-        '类型': 'MLCC',
-        '温度系数': 'X7R',
-        '工作温度': '-55°C to 125°C'
+        'Capacitance': '100nF',
+        'Voltage': '50V',
+        'Accuracy': '±10%',
+        'Type': 'MLCC',
+        'Temp Coeff': 'X7R',
+        'Operating Temp': '-55°C to 125°C'
       },
       datasheet: 'https://www.murata.com/en-us/products/productdetail?partno=GRM188R71C104KA35D'
     },
@@ -181,19 +181,19 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp8',
       model: 'LED-RED-5MM',
       type: 'diode',
-      typeName: '二极管',
+      typeName: 'Diode',
       manufacturer: 'kingbright',
       manufacturerName: 'Kingbright',
       package: 'dip',
       packageName: '5mm',
       price: 0.50,
       specifications: {
-        '颜色': '红色',
-        '波长': '620-630nm',
-        '正向电压': '1.8V-2.2V',
-        '正向电流': '20mA',
-        '视角': '20°',
-        '封装': '直插5mm'
+        'Color': 'Red',
+        'Wavelength': '620-630nm',
+        'Fwd Voltage': '1.8V-2.2V',
+        'Fwd Current': '20mA',
+        'Viewing Angle': '20°',
+        'Package': 'Through-hole 5mm'
       },
       datasheet: 'https://www.kingbright.com/attachments/file/psearch/000/00/00/KP-2012EC.pdf'
     },
@@ -201,18 +201,18 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp9',
       model: '2N2222A',
       type: 'transistor',
-      typeName: '三极管',
+      typeName: 'Transistor',
       manufacturer: 'onsemi',
       manufacturerName: 'ON Semiconductor',
       package: 'to',
       packageName: 'TO-92',
       price: 1.20,
       specifications: {
-        '类型': 'NPN',
-        '集电极电流': '800mA',
-        '集电极-发射极电压': '40V',
-        '放大倍数': '100-300',
-        '封装': 'TO-92'
+        'Type': 'NPN',
+        'Collector Current': '800mA',
+        'Vce': '40V',
+        'hFE': '100-300',
+        'Package': 'TO-92'
       },
       datasheet: 'https://www.onsemi.com/pdf/datasheet/2n2222a-d.pdf'
     },
@@ -220,24 +220,24 @@ const ComponentDatabase: React.FC = () => {
       id: 'comp10',
       model: 'LM7805',
       type: 'ic',
-      typeName: '集成电路',
+      typeName: 'IC',
       manufacturer: 'ti',
       manufacturerName: 'Texas Instruments',
       package: 'to',
       packageName: 'TO-220',
       price: 2.80,
       specifications: {
-        '类型': '线性稳压器',
-        '输出电压': '5V',
-        '输出电流': '1A',
-        '输入电压': '7V-35V',
-        '封装': 'TO-220'
+        'Type': 'Linear Regulator',
+        'Vout': '5V',
+        'Iout': '1A',
+        'Vin': '7V-35V',
+        'Package': 'TO-220'
       },
       datasheet: 'https://www.ti.com/lit/ds/symlink/lm7805.pdf'
     }
   ];
 
-  // 状态管理
+  // State
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filteredComponents, setFilteredComponents] = useState<Component[]>([...mockComponents]);
@@ -268,18 +268,18 @@ const ComponentDatabase: React.FC = () => {
 
   const totalCount = filteredComponents.length;
 
-  // 设置页面标题
+  // Page title
   useEffect(() => {
     const originalTitle = document.title;
     document.title = `${t('component_db.page_title')} - PCBTool.AI`;
     return () => { document.title = originalTitle; };
   }, [t]);
 
-  // 执行搜索和筛选
+  // Search & filter
   const performSearch = () => {
     let filtered = [...mockComponents];
     
-    // 搜索词筛选
+    // Keyword filter
     if (componentSearch) {
       const searchTerm = componentSearch.toLowerCase();
       filtered = filtered.filter(component => 
@@ -289,17 +289,17 @@ const ComponentDatabase: React.FC = () => {
       );
     }
     
-    // 类型筛选
+    // Type filter
     if (typeFilter) {
       filtered = filtered.filter(component => component.type === typeFilter);
     }
     
-    // 制造商筛选
+    // Manufacturer filter
     if (manufacturerFilter) {
       filtered = filtered.filter(component => component.manufacturer === manufacturerFilter);
     }
     
-    // 封装筛选
+    // Package filter
     if (packageFilter) {
       filtered = filtered.filter(component => component.package === packageFilter);
     }
@@ -309,14 +309,14 @@ const ComponentDatabase: React.FC = () => {
     setSelectedComponents(new Set());
   };
 
-  // 处理搜索框回车
+  // Search on enter
   const handleComponentSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       performSearch();
     }
   };
 
-  // 排序表格
+  // Sort table
   const sortTable = (field: SortField) => {
     const newSortOrder = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc';
     setSortField(field);
@@ -349,21 +349,21 @@ const ComponentDatabase: React.FC = () => {
     setFilteredComponents(sorted);
   };
 
-  // 处理每页条数变化
+  // Page size change
   const handlePageSizeChange = (value: string) => {
     const newPageSize = parseInt(value);
     setPageSize(newPageSize);
     setCurrentPage(1);
   };
 
-  // 切换页面
+  // Change page
   const changePage = (pageNum: number) => {
     const totalPages = Math.ceil(totalCount / pageSize);
     if (pageNum < 1 || pageNum > totalPages) return;
     setCurrentPage(pageNum);
   };
 
-  // 处理全选
+  // Select all
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     if (isChecked) {
@@ -374,7 +374,7 @@ const ComponentDatabase: React.FC = () => {
     }
   };
 
-  // 处理单个选择
+  // Single select
   const handleComponentSelect = (componentId: string, checked: boolean) => {
     const newSelected = new Set(selectedComponents);
     if (checked) {
@@ -396,7 +396,7 @@ const ComponentDatabase: React.FC = () => {
     }
   };
 
-  // 显示元器件详情
+  // Show detail
   const showComponentDetail = (componentId: string) => {
     const component = mockComponents.find(c => c.id === componentId);
     if (component) {
@@ -405,7 +405,7 @@ const ComponentDatabase: React.FC = () => {
     }
   };
 
-  // 关闭模态框
+  // Close modal
   const closeModal = () => {
     setShowComponentModal(false);
     setShowProjectSelectModal(false);
@@ -439,7 +439,7 @@ const ComponentDatabase: React.FC = () => {
       return currentText;
     }
 
-    const title = '【元器件清单】';
+    const title = '【Component List】';
     const trimmed = currentText.trimEnd();
     if (!trimmed) {
       return `${title}\n${line}\n`;
@@ -531,14 +531,14 @@ const ComponentDatabase: React.FC = () => {
     }
   };
 
-  // 获取当前页的元器件
+  // Get current page items
   const getCurrentPageComponents = () => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize, filteredComponents.length);
     return filteredComponents.slice(startIndex, endIndex);
   };
 
-  // 渲染分页按钮
+  // Render pagination
   const renderPaginationButtons = () => {
     const totalPages = Math.ceil(totalCount / pageSize);
     const buttons = [];
@@ -619,7 +619,7 @@ const ComponentDatabase: React.FC = () => {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
-    <AppShell pageTitle="元器件数据库" breadcrumb={['工作台', '知识库', '元器件数据库']}>
+    <AppShell pageTitle="Component Database" breadcrumb={['Dashboard', 'Resources', 'Components']}>
       <AnimatedAlert
         open={alertState.open}
         variant={alertState.type}
@@ -628,16 +628,16 @@ const ComponentDatabase: React.FC = () => {
         onClose={() => setAlertState(prev => ({ ...prev, open: false }))}
       />
 
-      {/* 工具栏区域 */}
+      {/* Toolbar */}
       <section className="mb-6">
         <div className="bg-white rounded-2xl shadow-card p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-            {/* 搜索框 */}
+            {/* Search */}
             <div className="flex-1 lg:max-w-md">
               <div className="relative">
                 <input 
                   type="text" 
-                  placeholder="搜索元器件型号、关键词..." 
+                  placeholder="Search component model, keywords..." 
                   value={componentSearch}
                   onChange={(e) => setComponentSearch(e.target.value)}
                   onKeyPress={handleComponentSearchKeyPress}
@@ -647,25 +647,25 @@ const ComponentDatabase: React.FC = () => {
               </div>
             </div>
               
-            {/* 筛选条件 */}
+            {/* Filters */}
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <div className="w-40">
                 <Select
                   value={typeFilter}
                   onChange={setTypeFilter}
                   options={[
-                    { label: '全部类型', value: '' },
-                    { label: '主控芯片', value: 'microcontroller' },
-                    { label: '传感器', value: 'sensor' },
-                    { label: '电阻', value: 'resistor' },
-                    { label: '电容', value: 'capacitor' },
-                    { label: '电感', value: 'inductor' },
-                    { label: '二极管', value: 'diode' },
-                    { label: '三极管', value: 'transistor' },
-                    { label: '集成电路', value: 'ic' },
-                    { label: '连接器', value: 'connector' },
+                    { label: 'All Types', value: '' },
+                    { label: 'MCU', value: 'microcontroller' },
+                    { label: 'Sensor', value: 'sensor' },
+                    { label: 'Resistor', value: 'resistor' },
+                    { label: 'Capacitor', value: 'capacitor' },
+                    { label: 'Inductor', value: 'inductor' },
+                    { label: 'Diode', value: 'diode' },
+                    { label: 'Transistor', value: 'transistor' },
+                    { label: 'IC', value: 'ic' },
+                    { label: 'Connector', value: 'connector' },
                   ]}
-                  placeholder="全部类型"
+                  placeholder="All Types"
                 />
               </div>
 
@@ -674,7 +674,7 @@ const ComponentDatabase: React.FC = () => {
                   value={manufacturerFilter}
                   onChange={setManufacturerFilter}
                   options={[
-                    { label: '全部制造商', value: '' },
+                    { label: 'All Manufacturers', value: '' },
                     { label: 'Texas Instruments', value: 'ti' },
                     { label: 'STMicroelectronics', value: 'st' },
                     { label: 'NXP Semiconductors', value: 'nxp' },
@@ -684,7 +684,7 @@ const ComponentDatabase: React.FC = () => {
                     { label: 'Maxim Integrated', value: 'maxim' },
                     { label: 'Analog Devices', value: 'analog' },
                   ]}
-                  placeholder="全部制造商"
+                  placeholder="All Mfg"
                 />
               </div>
 
@@ -693,7 +693,7 @@ const ComponentDatabase: React.FC = () => {
                   value={packageFilter}
                   onChange={setPackageFilter}
                   options={[
-                    { label: '全部封装', value: '' },
+                    { label: 'All Packages', value: '' },
                     { label: 'DIP', value: 'dip' },
                     { label: 'SMD', value: 'smd' },
                     { label: 'QFP', value: 'qfp' },
@@ -702,7 +702,7 @@ const ComponentDatabase: React.FC = () => {
                     { label: 'SOP', value: 'sop' },
                     { label: 'BGA', value: 'bga' },
                   ]}
-                  placeholder="全部封装"
+                  placeholder="All Pkg"
                 />
               </div>
                 
@@ -711,20 +711,20 @@ const ComponentDatabase: React.FC = () => {
                 className="px-6 py-3 bg-gradient-primary text-white rounded-lg font-medium hover:shadow-glow transition-all duration-300"
               >
                 <i className="fas fa-search mr-2"></i>
-                  搜索
+                  Search
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 内容展示区域 */}
+      {/* Content */}
       <section className="mb-6">
         <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-          {/* 表格头部 */}
+          {/* Table header */}
           <div className="p-6 border-b border-border-primary">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-text-primary">元器件列表</h3>
+              <h3 className="text-lg font-semibold text-text-primary">Component List</h3>
               <div className="flex items-center space-x-4">
                 <label className="flex items-center space-x-2 text-sm text-text-secondary">
                   <input 
@@ -733,7 +733,7 @@ const ComponentDatabase: React.FC = () => {
                     onChange={handleSelectAll}
                     className="rounded border-border-primary"
                   />
-                  <span>全选</span>
+                  <span>Select All</span>
                 </label>
                 <button 
                   onClick={handleBatchDelete}
@@ -741,13 +741,13 @@ const ComponentDatabase: React.FC = () => {
                   className="px-4 py-2 text-danger border border-danger rounded-lg hover:bg-danger hover:text-white transition-colors disabled:opacity-50"
                 >
                   <i className="fas fa-trash mr-2"></i>
-                    批量删除
+                    Batch Delete
                 </button>
               </div>
             </div>
           </div>
             
-          {/* 表格内容 */}
+          {/* Table body */}
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-bg-secondary">
@@ -762,7 +762,7 @@ const ComponentDatabase: React.FC = () => {
                         sortField === 'model' ? (sortOrder === 'asc' ? styles.sortAsc : styles.sortDesc) : ''
                       }`}
                     >
-                      <span className="font-medium">元器件型号</span>
+                      <span className="font-medium">Model</span>
                       <i className="fas fa-sort text-xs"></i>
                     </button>
                   </th>
@@ -773,7 +773,7 @@ const ComponentDatabase: React.FC = () => {
                         sortField === 'type' ? (sortOrder === 'asc' ? styles.sortAsc : styles.sortDesc) : ''
                       }`}
                     >
-                      <span className="font-medium">类型</span>
+                      <span className="font-medium">Type</span>
                       <i className="fas fa-sort text-xs"></i>
                     </button>
                   </th>
@@ -784,7 +784,7 @@ const ComponentDatabase: React.FC = () => {
                         sortField === 'manufacturer' ? (sortOrder === 'asc' ? styles.sortAsc : styles.sortDesc) : ''
                       }`}
                     >
-                      <span className="font-medium">制造商</span>
+                      <span className="font-medium">Manufacturer</span>
                       <i className="fas fa-sort text-xs"></i>
                     </button>
                   </th>
@@ -795,7 +795,7 @@ const ComponentDatabase: React.FC = () => {
                         sortField === 'package' ? (sortOrder === 'asc' ? styles.sortAsc : styles.sortDesc) : ''
                       }`}
                     >
-                      <span className="font-medium">封装</span>
+                      <span className="font-medium">Package</span>
                       <i className="fas fa-sort text-xs"></i>
                     </button>
                   </th>
@@ -806,12 +806,12 @@ const ComponentDatabase: React.FC = () => {
                         sortField === 'price' ? (sortOrder === 'asc' ? styles.sortAsc : styles.sortDesc) : ''
                       }`}
                     >
-                      <span className="font-medium">单价(¥)</span>
+                      <span className="font-medium">Price ($)</span>
                       <i className="fas fa-sort text-xs"></i>
                     </button>
                   </th>
                   <th className="text-left py-3 px-6 w-20">
-                    <span className="font-medium text-text-secondary">操作</span>
+                    <span className="font-medium text-text-secondary">Actions</span>
                   </th>
                 </tr>
               </thead>
@@ -847,7 +847,7 @@ const ComponentDatabase: React.FC = () => {
                         <button 
                           onClick={() => showComponentDetail(component.id)}
                           className="text-primary hover:text-secondary transition-colors" 
-                          title="查看详情"
+                          title="View Details"
                         >
                           <i className="fas fa-eye"></i>
                         </button>
@@ -859,29 +859,29 @@ const ComponentDatabase: React.FC = () => {
             </table>
           </div>
             
-          {/* 空状态 */}
+          {/* Empty */}
           {filteredComponents.length === 0 && (
             <div className="text-center py-16">
               <i className="fas fa-search text-6xl text-text-secondary mb-4"></i>
-              <h3 className="text-lg font-medium text-text-primary mb-2">未找到相关元器件</h3>
-              <p className="text-text-secondary">请尝试调整搜索条件或关键词</p>
+              <h3 className="text-lg font-medium text-text-primary mb-2">No components found</h3>
+              <p className="text-text-secondary">请尝试调整Search条件或关键词</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* 分页区域 */}
+      {/* Pagination */}
       <section>
         <div className="bg-white rounded-2xl shadow-card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            {/* 显示信息 */}
+            {/* Info */}
             <div className="text-sm text-text-secondary">
-                显示 <span>{totalCount > 0 ? startIndex : 0}</span> - <span>{endIndex}</span> 条，共 <span>{totalCount.toLocaleString()}</span> 条记录
+                Showing <span>{totalCount > 0 ? startIndex : 0}</span> - <span>{endIndex}</span>  of  <span>{totalCount.toLocaleString()}</span>  records
             </div>
               
-            {/* 每页条数选择 */}
+            {/* Page size */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-text-secondary">每页显示</span>
+              <span className="text-sm text-text-secondary">每页Showing</span>
               <div className="w-20">
                 <Select
                   value={pageSize.toString()}
@@ -895,10 +895,10 @@ const ComponentDatabase: React.FC = () => {
                   placeholder="10"
                 />
               </div>
-              <span className="text-sm text-text-secondary">条</span>
+              <span className="text-sm text-text-secondary">items</span>
             </div>
               
-            {/* 分页按钮 */}
+            {/* Pagination buttons */}
             <div className="flex items-center space-x-2">
               <button 
                 onClick={() => changePage(currentPage - 1)}
@@ -921,12 +921,12 @@ const ComponentDatabase: React.FC = () => {
           </div>
         </div>
       </section>
-      {/* 元器件详情模态框 */}
+      {/* Detail modal */}
       {showComponentModal && selectedComponent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
           <div className="flex items-center justify-center min-h-screen p-4">
             <div className="bg-white rounded-2xl shadow-card max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              {/* 模态框头部 */}
+              {/* Modal header */}
               <div className="p-6 border-b border-border-primary">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-text-primary">{selectedComponent.model}</h3>
@@ -939,39 +939,39 @@ const ComponentDatabase: React.FC = () => {
                 </div>
               </div>
               
-              {/* 模态框内容 */}
+              {/* Modal content */}
               <div className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* 基本信息 */}
+                  {/* Basic Info */}
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-text-primary border-b border-border-primary pb-2">基本信息</h4>
+                    <h4 className="text-lg font-semibold text-text-primary border-b border-border-primary pb-2">Basic Info</h4>
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">元器件型号:</span>
+                        <span className="text-text-secondary">Model:</span>
                         <span className="text-text-primary font-medium">{selectedComponent.model}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">类型:</span>
+                        <span className="text-text-secondary">Type:</span>
                         <span className="text-text-primary">{selectedComponent.typeName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">制造商:</span>
+                        <span className="text-text-secondary">Manufacturer:</span>
                         <span className="text-text-primary">{selectedComponent.manufacturerName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">封装:</span>
+                        <span className="text-text-secondary">Package:</span>
                         <span className="text-text-primary">{selectedComponent.packageName}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-text-secondary">单价:</span>
+                        <span className="text-text-secondary">Price:</span>
                         <span className="text-primary font-bold text-lg">¥{selectedComponent.price.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
                   
-                  {/* 技术规格 */}
+                  {/* Specifications */}
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-text-primary border-b border-border-primary pb-2">技术规格</h4>
+                    <h4 className="text-lg font-semibold text-text-primary border-b border-border-primary pb-2">Specifications</h4>
                     <div className="bg-bg-secondary rounded-lg p-4">
                       {Object.entries(selectedComponent.specifications).map(([key, value]) => (
                         <div key={key} className="grid grid-cols-2 gap-4 py-2 border-b border-border-primary last:border-b-0">
@@ -981,7 +981,7 @@ const ComponentDatabase: React.FC = () => {
                       ))}
                     </div>
                     
-                    {/* 数据手册 */}
+                    {/* Datasheet */}
                     {selectedComponent.datasheet && (
                       <div className="pt-4 border-t border-border-primary">
                         <a 
@@ -991,7 +991,7 @@ const ComponentDatabase: React.FC = () => {
                           className="flex items-center space-x-2 text-primary hover:text-secondary transition-colors"
                         >
                           <i className="fas fa-file-pdf"></i>
-                          <span>查看数据手册 (PDF)</span>
+                          <span>View Datasheet (PDF)</span>
                         </a>
                       </div>
                     )}
@@ -999,7 +999,7 @@ const ComponentDatabase: React.FC = () => {
                 </div>
               </div>
               
-              {/* 模态框底部 */}
+              {/* Modal footer */}
               <div className="p-6 border-t border-border-primary">
                 <div className="flex items-center justify-end space-x-3">
                   <button
@@ -1007,7 +1007,7 @@ const ComponentDatabase: React.FC = () => {
                     onClick={closeModal}
                     className="px-6 py-2 border border-border-primary rounded-lg text-text-secondary hover:bg-bg-secondary transition-colors"
                   >
-                    关闭
+                    Close
                   </button>
                   {projectOptions.length === 0 ? (
                     <button
@@ -1018,7 +1018,7 @@ const ComponentDatabase: React.FC = () => {
                       }}
                       className="px-6 py-2 bg-gradient-primary text-white rounded-lg hover:shadow-glow transition-all duration-300"
                     >
-                      去创建项目
+                      Create Project
                     </button>
                   ) : (
                     <button
@@ -1027,7 +1027,7 @@ const ComponentDatabase: React.FC = () => {
                       className="px-6 py-2 bg-gradient-primary text-white rounded-lg hover:shadow-glow transition-all duration-300"
                     >
                       <i className="fas fa-plus mr-2"></i>
-                      添加到项目
+                      Add to Project
                     </button>
                   )}
                 </div>
@@ -1036,14 +1036,14 @@ const ComponentDatabase: React.FC = () => {
           </div>
         </div>
       )}
-      {/* 项目选择模态框 */}
+      {/* Project select modal */}
       {showProjectSelectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[60]">
           <div className="flex items-center justify-center min-h-screen p-4">
             <div className="bg-white rounded-2xl shadow-card max-w-md w-full overflow-hidden">
               <div className="p-6 border-b border-border-primary">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-text-primary">选择项目</h3>
+                  <h3 className="text-xl font-semibold text-text-primary">Select Project</h3>
                   <button 
                     onClick={() => setShowProjectSelectModal(false)}
                     className="p-2 text-text-secondary hover:text-text-primary transition-colors"
@@ -1055,7 +1055,7 @@ const ComponentDatabase: React.FC = () => {
               
               <div className="p-6">
                 <div className="space-y-4">
-                  <p className="text-sm text-text-secondary">请选择要将 <strong>{selectedComponent?.model}</strong> 添加到的项目：</p>
+                  <p className="text-sm text-text-secondary">Select a project to add <strong>{selectedComponent?.model}</strong>  to:</p>
                   <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
                     {projectOptions.map((p) => (
                       <label 
@@ -1081,7 +1081,7 @@ const ComponentDatabase: React.FC = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-text-primary truncate">{p.name}</div>
-                          <div className="text-xs text-text-secondary truncate">{p.description || '无描述'}</div>
+                          <div className="text-xs text-text-secondary truncate">{p.description || 'No description'}</div>
                         </div>
                       </label>
                     ))}
@@ -1095,7 +1095,7 @@ const ComponentDatabase: React.FC = () => {
                   onClick={() => setShowProjectSelectModal(false)}
                   className="px-6 py-2 border border-border-primary rounded-lg text-text-secondary hover:bg-bg-secondary transition-colors"
                 >
-                  取消
+                  Cancel
                 </button>
                 <button
                   type="button"
@@ -1106,11 +1106,11 @@ const ComponentDatabase: React.FC = () => {
                   {isAddingToProject ? (
                     <>
                       <i className="fas fa-spinner fa-spin mr-2"></i>
-                      添加中...
+                      Adding...
                     </>
                   ) : (
                     <>
-                      确认添加
+                      Confirm
                     </>
                   )}
                 </button>
