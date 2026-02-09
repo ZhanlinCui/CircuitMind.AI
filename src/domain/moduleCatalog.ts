@@ -3,7 +3,7 @@ import { WorkflowModuleDefinition } from './workflow';
 export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   {
     id: 'power_usb_5v',
-    name: 'USB 5V 输入',
+    name: 'USB 5V Input',
     category: 'power',
     ports: [
       { id: 'pwr_5v_out', name: '5V', kind: 'power', direction: 'out', voltage: 5, railName: '5V' },
@@ -12,7 +12,7 @@ export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   },
   {
     id: 'power_buck_3v3',
-    name: '降压到 3.3V（Buck）',
+    name: '3.3V Buck Converter',
     category: 'power',
     ports: [
       { id: 'vin_5v', name: 'VIN 5V', kind: 'power', direction: 'in', voltage: 5, railName: '5V' },
@@ -22,7 +22,7 @@ export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   },
   {
     id: 'mcu_esp32_wroom',
-    name: 'ESP32-WROOM',
+    name: 'ESP32-WROOM MCU',
     category: 'mcu',
     ports: [
       { id: 'vdd_3v3', name: 'VDD 3.3V', kind: 'power', direction: 'in', voltage: 3.3, railName: '3V3' },
@@ -33,7 +33,7 @@ export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   },
   {
     id: 'sensor_bme280',
-    name: 'BME280 环境传感器',
+    name: 'BME280 Env Sensor',
     category: 'sensor',
     ports: [
       { id: 'vdd_3v3', name: 'VDD 3.3V', kind: 'power', direction: 'in', voltage: 3.3, railName: '3V3' },
@@ -43,7 +43,7 @@ export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   },
   {
     id: 'interface_usb_uart',
-    name: 'USB 转串口（下载/调试）',
+    name: 'USB-UART Bridge',
     category: 'interface',
     ports: [
       { id: 'vdd_5v', name: '5V', kind: 'power', direction: 'in', voltage: 5, railName: '5V' },
@@ -54,7 +54,7 @@ export const MODULE_CATALOG: readonly WorkflowModuleDefinition[] = [
   },
   {
     id: 'glue_i2c_pullup',
-    name: 'I2C 上拉电阻',
+    name: 'I2C Pull-up Resistors',
     category: 'glue',
     ports: [
       { id: 'vdd_3v3', name: '3.3V', kind: 'power', direction: 'in', voltage: 3.3, railName: '3V3' },

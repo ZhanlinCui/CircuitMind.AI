@@ -108,7 +108,7 @@ export function validateWorkflow(
       issues.push({
         id: `missing-node:${connection.id}`,
         severity: 'error',
-        message: '连接引用了不存在的模块实例',
+        message: 'Connection references a missing module instance',
         connectionId: connection.id,
       });
       continue;
@@ -119,8 +119,8 @@ export function validateWorkflow(
     if (!fromModule || !toModule) {
       issues.push({
         id: `missing-module:${connection.id}`,
-        severity: 'error',
-        message: '连接引用了不存在的模块定义',
+        severity: 'info',
+        message: 'AI-generated module (not in built-in catalog)',
         connectionId: connection.id,
       });
       continue;
@@ -132,7 +132,7 @@ export function validateWorkflow(
       issues.push({
         id: `missing-port:${connection.id}`,
         severity: 'error',
-        message: '连接引用了不存在的端口',
+        message: 'Port not found in module definition',
         connectionId: connection.id,
       });
       continue;
@@ -142,7 +142,7 @@ export function validateWorkflow(
       issues.push({
         id: `kind-mismatch:${connection.id}`,
         severity: 'error',
-        message: `端口类型不匹配：${fromPort.kind} → ${toPort.kind}`,
+        message: `Port type mismatch: ${fromPort.kind} -> ${toPort.kind}`,
         connectionId: connection.id,
         nodeIds: [fromNode.id, toNode.id],
       });
@@ -155,7 +155,7 @@ export function validateWorkflow(
         issues.push({
           id: `power-voltage-mismatch:${connection.id}`,
           severity: 'error',
-          message: `电源电压不匹配：${fromPort.voltage}V → ${toPort.voltage}V`,
+          message: `Voltage mismatch: ${fromPort.voltage}V -> ${toPort.voltage}V`,
           connectionId: connection.id,
           nodeIds: [fromNode.id, toNode.id],
         });
@@ -165,7 +165,7 @@ export function validateWorkflow(
         issues.push({
           id: `power-direction:${connection.id}`,
           severity: 'warning',
-          message: '建议从“输出”端口连接到“输入”端口（当前来源端口为输入）',
+          message: 'Recommend connecting from output to input (source is currently an input)',
           connectionId: connection.id,
         });
       }
@@ -176,7 +176,7 @@ export function validateWorkflow(
         issues.push({
           id: `bus-mismatch:${connection.id}`,
           severity: 'error',
-          message: `总线类型不匹配：${fromPort.bus} → ${toPort.bus}`,
+          message: `Bus type mismatch: ${fromPort.bus} -> ${toPort.bus}`,
           connectionId: connection.id,
           nodeIds: [fromNode.id, toNode.id],
         });
@@ -211,7 +211,7 @@ export function validateWorkflow(
       issues.push({
         id: 'i2c-pullup-missing',
         severity: 'warning',
-        message: '检测到 I2C 连接，建议添加上拉电阻（I2C Pull-up）模块',
+        message: 'I2C connection detected - consider adding pull-up resistors',
       });
     }
   }
