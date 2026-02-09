@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import {
   CircuitBoard, ArrowRight, Sparkles, Zap, Camera, FileText,
   ChevronRight, Shield, GitBranch, Layers, Play, CheckCircle2, Brain,
-  Eye, IterationCcw, Bot,
+  Eye, IterationCcw, Bot, Globe,
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -14,17 +13,59 @@ export default function LandingPage() {
       {/* ===== HEADER ===== */}
       <header className="fixed top-0 w-full bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/5 z-50">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
               <CircuitBoard className="h-5 w-5 text-white" />
             </div>
             <span className="font-bold text-lg tracking-tight">CircuitMind</span>
           </div>
-          <div className="flex items-center space-x-4">
-            <LanguageSwitcher />
+
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {[
+              { label: 'Features', href: '#features' },
+              { label: 'Pipeline', href: '#pipeline' },
+              { label: 'How It Works', href: '#how-it-works' },
+              { label: 'Tech Stack', href: '#tech-stack' },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-3">
             <button
-              onClick={() => navigate('/dashboard')}
-              className="px-5 py-2 bg-white text-[#0a0a0f] rounded-lg font-semibold text-sm hover:bg-slate-100 transition-colors"
+              onClick={() => {
+                const nextLang = document.documentElement.lang === 'zh' ? 'en' : 'zh';
+                document.documentElement.lang = nextLang;
+                window.localStorage.setItem('i18nextLng', nextLang);
+                window.location.reload();
+              }}
+              className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/5 border border-white/10"
+              title="Switch language"
+            >
+              <Globe className="h-4 w-4 inline mr-1.5" />
+              EN
+            </button>
+            <a
+              href="https://github.com/ZhanlinCui/CircuitMind.AI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-white/5 border border-white/10"
+            >
+              <GitBranch className="h-4 w-4 inline mr-1.5" />
+              GitHub
+            </a>
+            <button
+              onClick={() => navigate('/project-create')}
+              className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-sm hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-500/20"
             >
               Launch App <ArrowRight className="inline h-4 w-4 ml-1" />
             </button>
@@ -127,7 +168,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FEATURES ===== */}
-      <section className="py-32 relative">
+      <section id="features" className="py-32 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-950/10 to-transparent" />
         <div className="container mx-auto px-6 relative">
           <div className="text-center mb-20">
@@ -167,7 +208,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== STATS ===== */}
-      <section className="py-24 border-y border-white/5">
+      <section id="pipeline" className="py-24 border-y border-white/5">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             <StatCard value="4+" label="Gemini API Calls Per Project" icon={<Zap className="h-5 w-5 text-amber-400" />} />
@@ -179,7 +220,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section className="py-32 relative">
+      <section id="how-it-works" className="py-32 relative">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
             <span className="text-indigo-400 font-semibold text-sm uppercase tracking-widest mb-4 block">Workflow</span>
@@ -218,7 +259,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== TECH STACK ===== */}
-      <section className="py-24 border-t border-white/5">
+      <section id="tech-stack" className="py-24 border-t border-white/5">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-white mb-4">Built With</h2>
