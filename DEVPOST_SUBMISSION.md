@@ -16,6 +16,14 @@ Additionally, our **multimodal sketch analyzer** uses Gemini 3 Pro Vision to con
 
 ## Links
 
-- **Live Demo:** *(Vercel deployment URL — to be added after deploy)*
+- **Live Demo:** https://circuitmind-ai.vercel.app
 - **Code Repository:** https://github.com/ZhanlinCui/CircuitMind.AI
 - **Demo Video:** *(YouTube/Loom URL — to be added after recording)*
+
+## Testing Instructions (for judges)
+
+1. Open the live demo: https://circuitmind-ai.vercel.app
+2. Go to **Settings → AI Compute Config**
+3. Choose **Google Gemini** and configure your own Google API key
+4. Click **Test Connection**
+5. Return to dashboard and run project generation or sketch analysis

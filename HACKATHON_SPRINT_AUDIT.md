@@ -8,8 +8,8 @@ This audit is aligned to the official rules and judging criteria on `https://gem
 |---|---|---|---|
 | New project built during contest period | PASS | `README.md`, core AI flow in `src/lib/gemini.ts` | Keep commit history and development notes ready for verification |
 | Uses Gemini 3 API as core | PASS | `src/lib/gemini.ts`, `README.md`, `DEVPOST_SUBMISSION.md` | Highlight 4-step agentic pipeline in demo |
-| Public project link for testing | BLOCKER | `DEVPOST_SUBMISSION.md` still has `[Vercel URL]` placeholder | Replace with real public URL |
-| Public code repository (if no AI Studio link) | BLOCKER | `DEVPOST_SUBMISSION.md` has `[GitHub URL]` placeholder | Replace with public repo URL |
+| Public project link for testing | PASS | `DEVPOST_SUBMISSION.md` uses `https://circuitmind-ai.vercel.app` | Keep this URL stable until judging ends |
+| Public code repository (if no AI Studio link) | PASS | `DEVPOST_SUBMISSION.md` uses `https://github.com/ZhanlinCui/CircuitMind.AI` | Keep repository public and up to date |
 | Demo video <= 3 minutes, public | BLOCKER | `README.md` has placeholder demo link | Upload and paste public YouTube/Vimeo link |
 | English submission materials | PASS | `README.md`, `DEVPOST_SUBMISSION.md` are in English | Keep screenshots and captions in English |
 | Brief Gemini integration write-up (~200 words) | PASS | `DEVPOST_SUBMISSION.md` section complete | Add exact model names used in runtime |
@@ -51,9 +51,9 @@ This audit is aligned to the official rules and judging criteria on `https://gem
    - File: `.github/workflows/ci.yml`  
    - Mitigation: added `pnpm lint` + `pnpm build` workflow.
 
-4. **Submission placeholders unresolved (must fix manually)**  
+4. **Submission placeholders partially unresolved (must fix manually)**  
    - Files: `README.md`, `DEVPOST_SUBMISSION.md`  
-   - Mitigation: replace demo/live/repo placeholders before final submit.
+   - Mitigation: live/repo links are now set; still replace the demo video placeholder before final submit.
 
 ## 4) Final 6-Hour Sprint Plan
 

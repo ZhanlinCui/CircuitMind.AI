@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="#quick-start">Quick Start</a> •
+  <a href="https://circuitmind-ai.vercel.app">Live Demo</a> •
   <a href="#gemini-3-integration">Gemini 3 Integration</a> •
   <a href="#key-features">Features</a> •
   <a href="#architecture">Architecture</a> •
@@ -147,6 +148,11 @@ pnpm dev
 
 Open `http://localhost:5173` in your browser.
 
+### Live Test Link
+
+- Public test URL: **https://circuitmind-ai.vercel.app**
+- Important: before using AI features, configure your own Google Gemini API key in **Settings → AI Compute Config**.
+
 ### Configure Gemini API Key
 
 1. Go to [Google AI Studio](https://aistudio.google.com/) and get your API key
@@ -201,15 +207,21 @@ src/
 
 ## Demo
 
+> **Live Demo (Testing URL): [https://circuitmind-ai.vercel.app](https://circuitmind-ai.vercel.app)**
+>
+> **Important:** Configure your own Google API key first in **Settings → AI Compute Config**.
+>
 > **[Watch the 3-minute demo video](#)** *(link to be added)*
 
 ### Quick Demo Steps
 
-1. Open CircuitMind → Click **"Try Live Demo"**
-2. You'll see a pre-filled prompt: *"A portable air quality monitor..."*
-3. Click **Generate** — watch the 4-step pipeline in action
-4. Review 3 generated solutions with L1 architecture and R&D workflow
-5. Try **Sketch Recognition**: upload any hand-drawn circuit photo
+1. Open https://circuitmind-ai.vercel.app
+2. Go to **Settings → AI Compute Config**, paste your own Google API key, then click **Test Connection**
+3. Return to dashboard and click **"Try Live Demo"**
+4. You'll see a pre-filled prompt: *"A portable air quality monitor..."*
+5. Click **Generate** — watch the 4-step pipeline in action
+6. Review 3 generated solutions with L1 architecture and R&D workflow
+7. Try **Sketch Recognition**: upload any hand-drawn circuit photo
 
 ---
 

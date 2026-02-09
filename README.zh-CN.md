@@ -14,6 +14,7 @@
 
 <p align="center">
   <a href="#快速开始">快速开始</a> •
+  <a href="https://circuitmind-ai.vercel.app">在线体验</a> •
   <a href="#gemini-3-集成">Gemini 3 集成</a> •
   <a href="#核心功能">核心功能</a> •
   <a href="#系统架构">系统架构</a> •
@@ -141,6 +142,11 @@ pnpm dev
 
 打开浏览器访问 `http://localhost:5173`。
 
+### 在线测试链接
+
+- 测试地址：**https://circuitmind-ai.vercel.app**
+- 重要提示：使用 AI 功能前，请先在 **设置 → AI 算力配置** 中配置你自己的 Google Gemini API Key。
+
 ### 配置 Gemini API Key
 
 1. 访问 [Google AI Studio](https://aistudio.google.com/) 获取 API Key
@@ -153,15 +159,21 @@ pnpm dev
 
 ## 演示
 
+> **在线体验地址：[https://circuitmind-ai.vercel.app](https://circuitmind-ai.vercel.app)**
+>
+> **重要提示：** 请先在 **设置 → AI 算力配置** 配置你自己的 Google API Key。
+>
 > **[观看 3 分钟演示视频](#)** *(链接待补充)*
 
 ### 快速演示步骤
 
-1. 打开 CircuitMind → 点击 **"Try Live Demo"**
-2. 看到预填的提示词：*"A portable air quality monitor..."*
-3. 点击 **Generate** — 观看 4 步管道实时运行
-4. 查看 3 套生成方案，包含 L1 架构图和研发工作流
-5. 尝试 **草图识别**：上传任何手绘电路图
+1. 打开 https://circuitmind-ai.vercel.app
+2. 进入 **设置 → AI 算力配置**，粘贴你自己的 Google API Key，并点击 **测试连接**
+3. 返回首页点击 **"Try Live Demo"**
+4. 看到预填提示词：*"A portable air quality monitor..."*
+5. 点击 **Generate** — 观看 4 步管道实时运行
+6. 查看 3 套生成方案，包含 L1 架构图和研发工作流
+7. 尝试 **草图识别**：上传任何手绘电路图
 
 ---
 
