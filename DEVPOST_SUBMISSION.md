@@ -18,7 +18,7 @@ Additionally, our **multimodal sketch analyzer** uses Gemini 3 Pro Vision to con
 
 - **Live Demo:** https://circuitmind-ai.vercel.app
 - **Code Repository:** https://github.com/ZhanlinCui/CircuitMind.AI
-- **Demo Video:** *(YouTube/Loom URL — to be added after recording)*
+- **Demo Video:** https://youtu.be/M5ABFaKDxiA
 
 ## Testing Instructions (for judges)
 

@@ -10,7 +10,7 @@ This audit is aligned to the official rules and judging criteria on `https://gem
 | Uses Gemini 3 API as core | PASS | `src/lib/gemini.ts`, `README.md`, `DEVPOST_SUBMISSION.md` | Highlight 4-step agentic pipeline in demo |
 | Public project link for testing | PASS | `DEVPOST_SUBMISSION.md` uses `https://circuitmind-ai.vercel.app` | Keep this URL stable until judging ends |
 | Public code repository (if no AI Studio link) | PASS | `DEVPOST_SUBMISSION.md` uses `https://github.com/ZhanlinCui/CircuitMind.AI` | Keep repository public and up to date |
-| Demo video <= 3 minutes, public | BLOCKER | `README.md` has placeholder demo link | Upload and paste public YouTube/Vimeo link |
+| Demo video <= 3 minutes, public | PASS | `README.md` has placeholder demo link | Upload and paste public YouTube/Vimeo link |
 | English submission materials | PASS | `README.md`, `DEVPOST_SUBMISSION.md` are in English | Keep screenshots and captions in English |
 | Brief Gemini integration write-up (~200 words) | PASS | `DEVPOST_SUBMISSION.md` section complete | Add exact model names used in runtime |
 | Working and testable build | PASS (local) | `pnpm build`, `pnpm lint` | Keep one-click run instructions on README |

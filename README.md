@@ -211,7 +211,7 @@ src/
 >
 > **Important:** Configure your own Google API key first in **Settings → AI Compute Config**.
 >
-> **[Watch the 3-minute demo video](#)** *(link to be added)*
+> **[Watch the 3-minute demo video](https://youtu.be/M5ABFaKDxiA)**
 
 ### Quick Demo Steps
 
